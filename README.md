@@ -9,7 +9,7 @@ We are aiming to have the following features:
 - Echo cancellation
 
 Is it a module or a gdextension:
-- GDExtension should be possible but need to work out if Mac signing is going to work
+- It will be both
 
 Usability:
 - *Must* have documentation
