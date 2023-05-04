@@ -7,7 +7,7 @@ We are aiming to have the following features:
 - Opus codec support
 - Echo cancellation
 - Sensible default settings
-- Examples under /examples/
+- Simplified examples under /examples/
 
 Is it a module or a gdextension:
 - It will be both
