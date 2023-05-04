@@ -19,7 +19,7 @@ Usability:
 
 Nodes:
 - VOIPAudioStream extends AudioStream - positional/non positional
-- VOIPMicInput extends AudioEffectCapture - microphone input
+- VoIPCapture extends AudioEffectCapture - microphone input
 
 Settings:
 - use separate networking thread or audio thread, or both.
