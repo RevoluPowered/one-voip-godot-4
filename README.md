@@ -19,8 +19,13 @@ Usability:
 - Ideally works on all platforms godot supports
 
 Nodes:
-- VOIPAudioStream extends AudioStream - positional/non positional
+# Simple to use nodes
+- VoIPAudioStreamPlayer2D - 3D positional
+- VoIPAudioStreamPlayer2D - 2D positional
+- VoIPAudioStreamPlayer - non positional
+# Advanced nodes - which can be used for custom cases (like sending arbitrary non mic input) 
 - VoIPCapture extends AudioEffectCapture - microphone input
+- VoIPAudioStream extends AudioStream
 
 Settings:
 - use separate networking thread or audio thread, or both.
