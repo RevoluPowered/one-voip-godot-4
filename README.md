@@ -1,6 +1,3 @@
-# one-voip-godot-4
-One voip plugin to rule them all
-
 ## VOIP One for Godot 4
 
 A plugin with the goal of merging all the VOIP plugins into one general purpose plugin for godot4 
