@@ -9,6 +9,7 @@ We are aiming to have the following features:
 - Echo cancellation
 - Sensible default settings
 - Simplified examples under /examples/
+- Optional ability to stream and play arbitrary streams to clients
 
 Is it a module or a gdextension:
 - It will be both
