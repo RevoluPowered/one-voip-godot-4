@@ -1,12 +1,13 @@
 ## VOIP One for Godot 4
 
-A plugin with the goal of merging all the VOIP plugins into one general purpose plugin for godot4 
-
-The goal a drop in module/extension which can re-use the networking within the engine. (Undecided gdextension etc for now)
+A plugin which allows you to implement voice chat into your game.
 
 We are aiming to have the following features:
+- Drop in and use it right away, no insane complex rocket calculations to configure it.
 - Opus codec support
 - Echo cancellation
+- Sensible default settings
+- Examples under /examples/
 
 Is it a module or a gdextension:
 - It will be both
