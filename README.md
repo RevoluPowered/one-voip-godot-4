@@ -3,8 +3,9 @@
 A plugin which allows you to implement voice chat into your game.
 
 We are aiming to have the following features:
-- Drop in and use it right away, no insane complex rocket calculations to configure it.
+- Drop in and use it right away, no insane complex rocket calculations to configure it. 🚀
 - Opus codec support
+- Mute support for individual speakers or global
 - Echo cancellation
 - Sensible default settings
 - Simplified examples under /examples/
