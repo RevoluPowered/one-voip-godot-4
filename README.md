@@ -18,7 +18,7 @@ A plugin which allows you to implement voice chat into your game.
 - *Must* have documentation
 - Ideally works on all platforms godot supports
 
-**Nodes: **
+**Nodes:**
 
 Simple to use nodes:
 - VoIPAudioStreamPlayer2D - 3D positional
