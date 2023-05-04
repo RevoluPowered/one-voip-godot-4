@@ -2,7 +2,7 @@
 
 A plugin which allows you to implement voice chat into your game.
 
-We are aiming to have the following features:
+**We are aiming to have the following features:**
 - Drop in and use it right away, no insane complex rocket calculations to configure it. 🚀
 - Opus codec support
 - Mute support for individual speakers or global
@@ -11,14 +11,14 @@ We are aiming to have the following features:
 - Simplified examples under /examples/
 - Optional ability to stream and play arbitrary streams to clients (stretch goal)
 
-Is it a module or a gdextension:
+**Is it a module or a gdextension:**
 - It will be both
 
-Usability:
+**Usability:**
 - *Must* have documentation
 - Ideally works on all platforms godot supports
 
-Nodes: 
+**Nodes: **
 
 Simple to use nodes:
 - VoIPAudioStreamPlayer2D - 3D positional
@@ -29,13 +29,13 @@ Advanced nodes - which can be used for custom cases (like sending arbitrary non 
 - VoIPCapture extends AudioEffectCapture - microphone input
 - VoIPAudioStream extends AudioStream
 
-Settings:
+**Settings:**
 - Use separate networking thread or audio thread, or both.
 
-Networking:
+**Networking:**
 - We will look at using PacketPeer for handling our networking so that the implementation of the network is split from the plugin.
 - Godot has done the heavy lifting here so we should just re-use `PacketPeer`
 
-Documentation:
+**Documentation:**
 - Should provide a very short 5 line explanation of how to use it
 - Should have a docs page for the complex portions
