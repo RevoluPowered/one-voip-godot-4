@@ -18,17 +18,19 @@ Usability:
 - *Must* have documentation
 - Ideally works on all platforms godot supports
 
-Nodes:
-# Simple to use nodes
+Nodes: 
+
+Simple to use nodes:
 - VoIPAudioStreamPlayer2D - 3D positional
 - VoIPAudioStreamPlayer2D - 2D positional
 - VoIPAudioStreamPlayer - non positional
-# Advanced nodes - which can be used for custom cases (like sending arbitrary non mic input) 
+
+Advanced nodes - which can be used for custom cases (like sending arbitrary non mic input) 
 - VoIPCapture extends AudioEffectCapture - microphone input
 - VoIPAudioStream extends AudioStream
 
 Settings:
-- use separate networking thread or audio thread, or both.
+- Use separate networking thread or audio thread, or both.
 
 Networking:
 - We will look at using PacketPeer for handling our networking so that the implementation of the network is split from the plugin.
