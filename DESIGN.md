@@ -15,7 +15,9 @@ var audio_stream = effect.add_peer(debug_channel)
 
 Then put the stream into any AudioStreamPlayer. Remember to stop/delete the player when the peer disconnects.
 
-An example of this setup will be in the Demo folder.
+After this process, the VOIPInputCapture should begin automatically sending audio to all peers, and each VOIPAudioStream obtained with `add_peer` should play the audio for that peer assuming the peer is still connected and sending audio.
+
+An example of this setup will be in the Demo folder. The demo project, when two clients are opened, should begin transmitting audio with no errors.
 
 ## GDScript Objects
 ```
