@@ -6,7 +6,7 @@ using namespace godot;
 
 Ref<AudioStreamPlayback> AudioStreamVOIP::_instantiate_playback() const{
     Ref<AudioStreamPlaybackVOIP> playback;
-	playback.instantiate();
-	playback->base = Ref<AudioStreamVOIP>(this);
-	return playback;
+    playback.instantiate();
+    playback->base = Ref<AudioStreamVOIP>(this);
+    return playback;
 }
