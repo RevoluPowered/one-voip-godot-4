@@ -24,9 +24,9 @@ properties
     bool muted
     float volume
 methods
-    VOIPAudioStream add_peer(PacketPeer)
+    AudioStreamVOIP add_peer(PacketPeer)
 
-VOIPAudioStream : AudioStream
+AudioStreamVOIP : AudioStream
 
-VOIPAudioStreamPlayback : AudioStreamPlayback
+AudioStreamPlaybackVOIP : AudioStreamPlayback
 ```
