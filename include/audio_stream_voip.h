@@ -30,9 +30,9 @@ public:
 
     virtual String _get_stream_name() const override { return "VOIP Peer"; }
     virtual double _get_length() const override { return 0; }
-	virtual bool _is_monophonic() const override { return true; }
+    virtual bool _is_monophonic() const override { return true; }
     virtual double _get_bpm() const override { return 0.0; }
-	virtual int32_t _get_beat_count() const override { return 0; }
+    virtual int32_t _get_beat_count() const override { return 0; }
 
 };
 
