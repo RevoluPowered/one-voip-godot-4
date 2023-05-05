@@ -31,8 +31,8 @@ public:
     virtual int32_t _mix(AudioFrame *buffer, double rate_scale, int32_t frames) override;
     
     virtual int _get_loop_count() const override { return 0; }
-	virtual double _get_playback_position() const override { return 0; }
-	virtual void _seek(double p_time) override {}
+    virtual double _get_playback_position() const override { return 0; }
+    virtual void _seek(double p_time) override {}
 
 };
 
