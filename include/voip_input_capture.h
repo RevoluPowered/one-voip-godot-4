@@ -23,9 +23,19 @@ public:
     float volume; // [0, 1]
 
 
+    // Property Set / Get
+
+    void set_muted(const bool _muted) { muted = _muted; }
+    bool is_muted() const { return muted; }
+
+    void set_volume(const float _volume) { volume = _volume; } // Error condition for outside [0,1]?
+    float get_volume() const { return volume; }
+
+
     // Methods
 
     Ref<AudioStreamVOIP> add_peer(Ref<PacketPeer> peer);
+    void remove_peer(Ref<PacketPeer> peer);
 
 };
 

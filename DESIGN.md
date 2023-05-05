@@ -25,6 +25,7 @@ properties
     float volume
 methods
     AudioStreamVOIP add_peer(PacketPeer)
+    void remove_peer(PacketPeer)
 
 AudioStreamVOIP : AudioStream
 
