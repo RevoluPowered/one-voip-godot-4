@@ -6,9 +6,9 @@ var enet: ENetMultiplayerPeer
 func _enter_tree():
 	var args: Dictionary = parse_args(OS.get_cmdline_args())
 	
-	var port = 80
+	var port: int = 80
 	if args.has("port"):
-		port = args["port"]
+		port = int(args["port"])
 	
 	enet = ENetMultiplayerPeer.new()
 	if enet.create_server(port) == OK:

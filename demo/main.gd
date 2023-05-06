@@ -1,7 +1,5 @@
 extends Node3D
 
-var SERVER_IP = ""
-
 var user_scene = preload("res://user.tscn")
 
 var enet: ENetMultiplayerPeer
@@ -12,6 +10,16 @@ var peer_scenes = {}
 
 
 func _enter_tree():
+	var args: Dictionary = parse_args(OS.get_cmdline_args())
+	
+	var port: int = 80
+	if args.has("port"):
+		port = int(args["port"])
+	
+	var ip = "127.0.0.1"
+	if args.has("ip"):
+		ip = args["ip"]
+	
 	var idx = AudioServer.get_bus_index("Mic")
 	voip = AudioServer.get_bus_effect(idx, 0)
 	
@@ -23,7 +31,7 @@ func _enter_tree():
 	multiplayer.server_disconnected.connect(server_disconnected)
 	
 	enet = ENetMultiplayerPeer.new()
-	enet.create_client(SERVER_IP, 80)
+	enet.create_client(ip, port)
 	if enet.get_connection_status() == MultiplayerPeer.CONNECTION_DISCONNECTED:
 		connection_failed()
 		return
@@ -55,3 +63,14 @@ func peer_disconnected(id):
 	if id != 1: # No VOIP with server
 		print("User disconnected: ", id)
 		peers.erase(id)
+
+
+func parse_args(args: PackedStringArray):
+	var arguments = {}
+	for argument in args:
+		# Parse valid command-line arguments into a dictionary
+		if argument.find("=") > -1:
+			var key_value = argument.split("=")
+			arguments[key_value[0].lstrip("--")] = key_value[1]
+			
+	return arguments
