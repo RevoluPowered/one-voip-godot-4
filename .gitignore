@@ -1,0 +1,14 @@
+.DS_Store
+.vscode/
+.sconsign.dblite
+wasmer/
+addons.zip
+*.os
+*.obj
+*.pdb
+*.idb
+*.so
+*.dylib
+*.dll
+*.o
+__pycache__
