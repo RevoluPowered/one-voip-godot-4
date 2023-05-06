@@ -1,0 +1,57 @@
+extends Node3D
+
+var SERVER_IP = ""
+
+var user_scene = preload("res://user.tscn")
+
+var enet: ENetMultiplayerPeer
+var voip: VOIPInputCapture
+
+var peers = {}
+var peer_scenes = {}
+
+
+func _enter_tree():
+	var idx = AudioServer.get_bus_index("Mic")
+	voip = AudioServer.get_bus_effect(idx, 0)
+	
+	multiplayer.peer_connected.connect(peer_connected)
+	multiplayer.peer_disconnected.connect(peer_disconnected)
+	
+	multiplayer.connected_to_server.connect(connected_to_server)
+	multiplayer.connection_failed.connect(connection_failed)
+	multiplayer.server_disconnected.connect(server_disconnected)
+	
+	enet = ENetMultiplayerPeer.new()
+	enet.create_client(SERVER_IP, 80)
+	if enet.get_connection_status() == MultiplayerPeer.CONNECTION_DISCONNECTED:
+		connection_failed()
+		return
+	multiplayer.set_multiplayer_peer(enet)
+	
+	print("Connecting...")
+
+
+func connected_to_server():
+	print("Connected to server.")
+	
+func connection_failed():
+	print("Failed to connect to server.")
+	
+func server_disconnected():
+	print("Server disconnected.")
+
+
+func peer_connected(id):
+	if id != 1: # No VOIP with server
+		print("User connected: ", id)
+		peers[id] = enet.get_peer(id)
+		peer_scenes[id] = user_scene.instantiate()
+		add_child(peer_scenes[id])
+		peer_scenes[id].stream = voip.add_peer(peers[id])
+		peer_scenes[id].play() # Necessary?
+
+func peer_disconnected(id):
+	if id != 1: # No VOIP with server
+		print("User disconnected: ", id)
+		peers.erase(id)
