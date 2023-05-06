@@ -1,6 +1,7 @@
 .DS_Store
 .vscode/
 .sconsign.dblite
+.godot
 wasmer/
 addons.zip
 *.os
