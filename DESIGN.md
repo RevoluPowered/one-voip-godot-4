@@ -6,16 +6,18 @@ Spawn in a new bus in your project's audio mixer for your microphone, mute the b
 
 Add an AudioStreamPlayer somewhere in the scene, add a new AudioStreamMicrophone as the stream, set the Bus to the one you made (e.g. in the demo it's called "Mic") and turn on autoplay.
 
-To use a PacketPeer (e.g. an ENetPacketPeer) to start sending and receiving audio, just get the effect somewhere in a script like this, and trade the peer for an audio stream:
+To send audio, connect a function to the packet_ready signal on the effect:
 ```
 var idx = AudioServer.get_bus_index("Mic")
 var effect = AudioServer.get_bus_effect(idx, 0)
-var audio_stream = effect.add_peer(debug_channel)
+effect.packet_ready.connect(_on_packet_ready)
 ```
+And send the packet using any method you like in the _on_packet_ready function.
 
-Then put the stream into any AudioStreamPlayer. Remember to stop/delete the player when the peer disconnects.
-
-After this process, the VOIPInputCapture should begin automatically sending audio to all peers, and each VOIPAudioStream obtained with `add_peer` should play the audio for that peer assuming the peer is still connected and sending audio.
+To receive audio, instantiate an AudioStreamVOIP every time a peer connects, and add it to some kind of AudioStreamPlayer. When you receive a packet, figure out what user sent it, and then push it to their AudioStreamVOIP:
+```
+stream.push_packet(packet)
+```
 
 An example of this setup will be in the Demo folder. The demo project, when two clients are opened, should begin transmitting audio with no errors.
 
@@ -25,11 +27,12 @@ VOIPInputCapture : AudioEffectCapture
 properties
     bool muted
     float volume
-methods
-    AudioStreamVOIP add_peer(PacketPeer)
-    void remove_peer(PacketPeer)
+signals
+    void packet_ready(PackedByteArray)
 
 AudioStreamVOIP : AudioStream
+methods
+    void push_packet(PackedByteArray)
 
 AudioStreamPlaybackVOIP : AudioStreamPlayback
 ```
