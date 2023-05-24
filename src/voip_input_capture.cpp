@@ -36,8 +36,8 @@ void VOIPInputCapture::_bind_methods(){
     ClassDB::add_signal(
         "VOIPInputCapture",
         MethodInfo(
-            PropertyInfo(Variant::PACKED_BYTE_ARRAY, "audio_packet", PROPERTY_HINT_NONE, "", 6U, "bytearray"),
-            "packet_ready"
+            "packet_ready",
+            PropertyInfo(Variant::PACKED_BYTE_ARRAY, "audio_packet", PROPERTY_HINT_NONE, "", 6U, "bytearray")
         )
     );
 
