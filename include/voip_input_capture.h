@@ -2,7 +2,6 @@
 #define VOIP_INPUT_CAPTURE_H
 
 #include <godot_cpp/classes/audio_effect_capture.hpp>
-#include <godot_cpp/classes/packet_peer.hpp>
 
 #include "audio_stream_voip.h"
 
