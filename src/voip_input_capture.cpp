@@ -31,16 +31,14 @@ void VOIPInputCapture::_bind_methods(){
     );
 
 
-    // Methods
+    // Signals
 
-    ClassDB::bind_method(D_METHOD("add_peer"), &VOIPInputCapture::add_peer);
-    ClassDB::bind_method(D_METHOD("remove_peer"), &VOIPInputCapture::remove_peer);
+    ClassDB::add_signal(
+        "VOIPInputCapture",
+        MethodInfo(
+            PropertyInfo(Variant::PACKED_BYTE_ARRAY, "audio_packet", PROPERTY_HINT_NONE, "", 6U, "bytearray"),
+            "packet_ready"
+        )
+    );
 
-}
-
-Ref<AudioStreamVOIP> VOIPInputCapture::add_peer(Ref<PacketPeer> peer) {
-    return new Ref<AudioStreamVOIP>();
-}
-
-void VOIPInputCapture::remove_peer(Ref<PacketPeer> peer){
 }

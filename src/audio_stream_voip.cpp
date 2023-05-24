@@ -10,3 +10,7 @@ Ref<AudioStreamPlayback> AudioStreamVOIP::_instantiate_playback() const{
     playback->base = Ref<AudioStreamVOIP>(this);
     return playback;
 }
+
+void AudioStreamVOIP::push_packet(const PackedByteArray& packet){
+
+}
