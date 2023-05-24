@@ -7,10 +7,10 @@ void VOIPInputCapture::_bind_methods(){
 
     // Property Get / Set
 
-    ClassDB::bind_method(D_METHOD("set_muted"), &VOIPInputCapture::set_muted);
+    ClassDB::bind_method(D_METHOD("set_muted", "muted"), &VOIPInputCapture::set_muted);
     ClassDB::bind_method(D_METHOD("is_muted"), &VOIPInputCapture::is_muted);
 
-    ClassDB::bind_method(D_METHOD("set_volume"), &VOIPInputCapture::set_volume);
+    ClassDB::bind_method(D_METHOD("set_volume", "volume"), &VOIPInputCapture::set_volume);
     ClassDB::bind_method(D_METHOD("get_volume"), &VOIPInputCapture::get_volume);
 
 
