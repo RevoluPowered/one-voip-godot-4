@@ -7,10 +7,10 @@ void VOIPInputCapture::_bind_methods(){
 
     // Property Get / Set
 
-    ClassDB::bind_method(D_METHOD("set_muted"), &VOIPInputCapture::set_muted);
+    ClassDB::bind_method(D_METHOD("set_muted", "muted"), &VOIPInputCapture::set_muted);
     ClassDB::bind_method(D_METHOD("is_muted"), &VOIPInputCapture::is_muted);
 
-    ClassDB::bind_method(D_METHOD("set_volume"), &VOIPInputCapture::set_volume);
+    ClassDB::bind_method(D_METHOD("set_volume", "volume"), &VOIPInputCapture::set_volume);
     ClassDB::bind_method(D_METHOD("get_volume"), &VOIPInputCapture::get_volume);
 
 
@@ -31,16 +31,14 @@ void VOIPInputCapture::_bind_methods(){
     );
 
 
-    // Methods
+    // Signals
 
-    ClassDB::bind_method(D_METHOD("add_peer"), &VOIPInputCapture::add_peer);
-    ClassDB::bind_method(D_METHOD("remove_peer"), &VOIPInputCapture::remove_peer);
+    ClassDB::add_signal(
+        "VOIPInputCapture",
+        MethodInfo(
+            "packet_ready",
+            PropertyInfo(Variant::PACKED_BYTE_ARRAY, "audio_packet", PROPERTY_HINT_NONE, "", 6U, "bytearray")
+        )
+    );
 
-}
-
-Ref<AudioStreamVOIP> VOIPInputCapture::add_peer(Ref<PacketPeer> peer) {
-    return new Ref<AudioStreamVOIP>();
-}
-
-void VOIPInputCapture::remove_peer(Ref<PacketPeer> peer){
 }
