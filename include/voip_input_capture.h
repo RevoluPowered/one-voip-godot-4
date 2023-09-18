@@ -15,7 +15,12 @@ class VOIPInputCapture : public AudioEffectCapture {
 protected:
     static void _bind_methods();
 
+private:
+    PackedByteArray _sample_buf_to_packet(PackedVector2Array samples);
+
 public:
+    int OPUS_FRAME_SIZE = 480;
+
     // Properties
 
     bool muted;
@@ -29,6 +34,11 @@ public:
 
     void set_volume(const float _volume) { volume = _volume; } // Error condition for outside [0,1]?
     float get_volume() const { return volume; }
+
+
+    // Methods
+
+    void send_test_packet();
 
 };
 

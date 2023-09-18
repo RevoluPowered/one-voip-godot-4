@@ -4,6 +4,7 @@ var user = load("res://user.tscn")
 
 var rtc_mp: WebRTCMultiplayerPeer = WebRTCMultiplayerPeer.new()
 var sealed := false
+var mic_capture: VOIPInputCapture
 
 var users = {} # {WebRTCPeerConnection ID: AudioStreamPlayer}
 
@@ -15,8 +16,8 @@ func _ready():
 	start("wss://api.lycan-subscribe.com/godot-rtc-demo", "e621lmao")
 	
 	var idx = AudioServer.get_bus_index("Mic")
-	var effect = AudioServer.get_bus_effect(idx, 0)
-	effect.packet_ready.connect(self._packet_ready)
+	mic_capture = AudioServer.get_bus_effect(idx, 0)
+	mic_capture.packet_ready.connect(self._packet_ready)
 
 
 func _init():
@@ -35,6 +36,7 @@ func _init():
 
 func _process(delta):
 	super._process(delta)
+	
 	var peers = rtc_mp.get_peers()
 	for peer_id in peers.keys():
 		peers[peer_id]["connection"].poll()
@@ -48,7 +50,8 @@ func _packet_ready(packet): #New packet from mic to send
 	var peers = rtc_mp.get_peers()
 	for peer_id in peers.keys():
 		var channel_0 = peers[peer_id]["channels"][0]
-		channel_0.put_packet(packet)
+		if channel_0.get_ready_state() == WebRTCDataChannel.STATE_OPEN:
+			channel_0.put_packet(packet)
 
 
 func start(url, lobby = "", mesh:=true):

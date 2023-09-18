@@ -1,3 +1,5 @@
+#include <godot_cpp/variant/utility_functions.hpp>
+
 #include "audio_stream_voip.h"
 #include "audio_stream_playback_voip.h"
 
@@ -20,5 +22,5 @@ Ref<AudioStreamPlayback> AudioStreamVOIP::_instantiate_playback() const{
 }
 
 void AudioStreamVOIP::push_packet(const PackedByteArray& packet){
-
+    UtilityFunctions::print("Received samples: ", packet.size());
 }

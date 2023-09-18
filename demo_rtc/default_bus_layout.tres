@@ -2,6 +2,7 @@
 
 [sub_resource type="VOIPInputCapture" id="VOIPInputCapture_g0b74"]
 muted = true
+volume = 0.0
 resource_name = "VOIPInputCapture"
 
 [resource]
