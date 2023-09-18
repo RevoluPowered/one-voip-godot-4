@@ -16,7 +16,7 @@ func _ready():
 	
 	var idx = AudioServer.get_bus_index("Mic")
 	var effect = AudioServer.get_bus_effect(idx, 0)
-	effect.packet_ready.connect("_packet_ready")
+	effect.packet_ready.connect(self._packet_ready)
 
 
 func _init():
@@ -86,14 +86,14 @@ func _new_ice_candidate(mid_name, index_name, sdp_name, id):
 func _offer_created(type, data, id):
 	if not rtc_mp.has_peer(id):
 		return
-	print("created", type)
+	#print("created", type)
 	rtc_mp.get_peer(id).connection.set_local_description(type, data)
 	if type == "offer": send_offer(id, data)
 	else: send_answer(id, data)
 
 
 func _connected(id, use_mesh):
-	print("Connected %d, mesh: %s" % [id, use_mesh])
+	#print("Connected %d, mesh: %s" % [id, use_mesh])
 	if use_mesh:
 		rtc_mp.create_mesh(id, [MultiplayerPeer.TRANSFER_MODE_UNRELIABLE, MultiplayerPeer.TRANSFER_MODE_UNRELIABLE, MultiplayerPeer.TRANSFER_MODE_UNRELIABLE])
 	elif id == 1:
@@ -120,7 +120,7 @@ func _disconnected():
 func _peer_connected(id):
 	print("Peer connected %d" % id)
 	_create_peer(id)
-	users[id] = user.new()
+	users[id] = user.instantiate()
 	add_child(users[id])
 
 
@@ -131,13 +131,13 @@ func _peer_disconnected(id):
 
 
 func _offer_received(id, offer):
-	print("Got offer: %d" % id)
+	#print("Got offer: %d" % id)
 	if rtc_mp.has_peer(id):
 		rtc_mp.get_peer(id).connection.set_remote_description("offer", offer)
 
 
 func _answer_received(id, answer):
-	print("Got answer: %d" % id)
+	#print("Got answer: %d" % id)
 	if rtc_mp.has_peer(id):
 		rtc_mp.get_peer(id).connection.set_remote_description("answer", answer)
 

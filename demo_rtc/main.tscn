@@ -1,3 +1,6 @@
-[gd_scene format=3 uid="uid://cafw8ug27vyuo"]
+[gd_scene load_steps=2 format=3 uid="uid://cafw8ug27vyuo"]
+
+[ext_resource type="Script" path="res://multiplayer_client.gd" id="1_7wsab"]
 
 [node name="main" type="Node3D"]
+script = ExtResource("1_7wsab")
