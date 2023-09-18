@@ -23,8 +23,8 @@ public:
 
     // Properties
 
-    bool muted;
-    float volume; // [0, 1]
+    bool muted = false;
+    float volume = 1; // [0, 1]
 
 
     // Property Set / Get
