@@ -2,6 +2,7 @@
 .vscode/
 .sconsign.dblite
 .godot
+webrtc/
 wasmer/
 addons.zip
 *.os

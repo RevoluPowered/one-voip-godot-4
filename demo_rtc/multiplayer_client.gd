@@ -5,6 +5,8 @@ var user = load("res://user.tscn")
 var rtc_mp: WebRTCMultiplayerPeer = WebRTCMultiplayerPeer.new()
 var sealed := false
 
+var users = {} # {WebRTCPeerConnection ID: AudioStreamPlayer}
+
 
 func _ready():
 	print("Audio devices: ", AudioServer.get_input_device_list())
@@ -31,8 +33,22 @@ func _init():
 	peer_disconnected.connect(self._peer_disconnected)
 
 
+func _process(delta):
+	super._process(delta)
+	var peers = rtc_mp.get_peers()
+	for peer_id in peers.keys():
+		peers[peer_id]["connection"].poll()
+		var channel_0 = peers[peer_id]["channels"][0]
+		if channel_0.get_ready_state() == WebRTCDataChannel.STATE_OPEN:
+			while channel_0.get_available_packet_count() > 0:
+				users[peer_id].stream.push_packet(channel_0.get_packet())
+
+
 func _packet_ready(packet): #New packet from mic to send
-	rtc_mp.put_packet(packet)
+	var peers = rtc_mp.get_peers()
+	for peer_id in peers.keys():
+		var channel_0 = peers[peer_id]["channels"][0]
+		channel_0.put_packet(packet)
 
 
 func start(url, lobby = "", mesh:=true):
@@ -44,7 +60,6 @@ func start(url, lobby = "", mesh:=true):
 
 
 func stop():
-	multiplayer.multiplayer_peer = null
 	rtc_mp.close()
 	close()
 
@@ -52,19 +67,12 @@ func stop():
 func _create_peer(id):
 	var peer: WebRTCPeerConnection = WebRTCPeerConnection.new()
 	
-	var debug_channel = peer.create_data_channel("voip", {"id": 1, "negotiated": true})
-	var audio_stream = $VOIPClient.add_peer(debug_channel)
-	var scene_instance = user.instantiate()
-	add_child(scene_instance)
-	scene_instance.stream = audio_stream
-	scene_instance.play()
-	
 	peer.initialize({
 		"iceServers": [ { "urls": ["stun:stun.l.google.com:19302"] } ]
 	})
 	peer.session_description_created.connect(self._offer_created.bind(id))
 	peer.ice_candidate_created.connect(self._new_ice_candidate.bind(id))
-	rtc_mp.add_peer(peer, id)
+	rtc_mp.add_peer(peer, id)  # For some reason this opens 3 data channels
 	if id < rtc_mp.get_unique_id(): # So lobby creator never creates offers.
 		peer.create_offer()
 	return peer
@@ -87,12 +95,11 @@ func _offer_created(type, data, id):
 func _connected(id, use_mesh):
 	print("Connected %d, mesh: %s" % [id, use_mesh])
 	if use_mesh:
-		rtc_mp.create_mesh(id)
+		rtc_mp.create_mesh(id, [MultiplayerPeer.TRANSFER_MODE_UNRELIABLE, MultiplayerPeer.TRANSFER_MODE_UNRELIABLE, MultiplayerPeer.TRANSFER_MODE_UNRELIABLE])
 	elif id == 1:
-		rtc_mp.create_server()
+		rtc_mp.create_server([MultiplayerPeer.TRANSFER_MODE_UNRELIABLE, MultiplayerPeer.TRANSFER_MODE_UNRELIABLE, MultiplayerPeer.TRANSFER_MODE_UNRELIABLE])
 	else:
-		rtc_mp.create_client(id)
-	multiplayer.multiplayer_peer = rtc_mp
+		rtc_mp.create_client(id, [MultiplayerPeer.TRANSFER_MODE_UNRELIABLE, MultiplayerPeer.TRANSFER_MODE_UNRELIABLE, MultiplayerPeer.TRANSFER_MODE_UNRELIABLE])
 
 
 func _lobby_joined(lobby):
@@ -113,10 +120,14 @@ func _disconnected():
 func _peer_connected(id):
 	print("Peer connected %d" % id)
 	_create_peer(id)
+	users[id] = user.new()
+	add_child(users[id])
 
 
 func _peer_disconnected(id):
 	if rtc_mp.has_peer(id): rtc_mp.remove_peer(id)
+	users[id].queue_free()
+	users.erase(id)
 
 
 func _offer_received(id, offer):
