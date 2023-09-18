@@ -131,6 +131,7 @@ func _peer_connected(id):
 
 
 func _peer_disconnected(id):
+	print("Peer disconnected %d" % id)
 	if rtc_mp.has_peer(id): rtc_mp.remove_peer(id)
 	users[id].queue_free()
 	users.erase(id)
