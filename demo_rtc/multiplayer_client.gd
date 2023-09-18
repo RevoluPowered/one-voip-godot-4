@@ -1,5 +1,8 @@
 extends "ws_webrtc_client.gd"
 
+var SERVER_URL = ""
+var LOBBY_NAME = ""
+
 var user = load("res://user.tscn")
 
 var rtc_mp: WebRTCMultiplayerPeer = WebRTCMultiplayerPeer.new()
@@ -13,7 +16,7 @@ func _ready():
 	print("Audio devices: ", AudioServer.get_input_device_list())
 	print("Current device: ", AudioServer.get_input_device())
 	
-	start("wss://api.lycan-subscribe.com/godot-rtc-demo", "e621lmao")
+	start(SERVER_URL, LOBBY_NAME)
 	
 	var idx = AudioServer.get_bus_index("Mic")
 	mic_capture = AudioServer.get_bus_effect(idx, 0)
