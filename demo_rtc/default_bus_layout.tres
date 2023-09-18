@@ -1,0 +1,10 @@
+[gd_resource type="AudioBusLayout" load_steps=2 format=3 uid="uid://c6f3bxqufy6ij"]
+
+[sub_resource type="VOIPInputCapture" id="VOIPInputCapture_kxxt2"]
+muted = true
+volume = 0.0
+resource_name = "VOIPInputCapture"
+
+[resource]
+bus/0/effect/0/effect = SubResource("VOIPInputCapture_kxxt2")
+bus/0/effect/0/enabled = true
