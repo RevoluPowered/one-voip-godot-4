@@ -12,7 +12,15 @@ env = SConscript("godot-cpp/SConstruct")
 # - CPPDEFINES are for pre-processor defines
 # - LINKFLAGS are for linking flags
 
-# tweak this if you want to use different folders, or more folders, to store your source code in.
+
+# Opus (REQUIRES PRECOMPILE)
+
+env.Append(CPPPATH=["thirdparty/opus/include"], LIBS=["thirdparty/opus/build/Release/opus.lib"])
+env['LINKFLAGS'] = ['/WX:NO']
+
+
+# OneVOIP Extension
+
 env.Append(CPPPATH=["include/"])
 env['CCPDBFLAGS'] = '/Zi /Fd${TARGET}.pdb'
 sources = Glob("src/*.cpp")

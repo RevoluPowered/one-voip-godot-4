@@ -4,6 +4,7 @@
 #include <godot_cpp/classes/audio_effect_capture.hpp>
 
 #include "audio_stream_voip.h"
+#include "opus.h"
 
 
 namespace godot {
@@ -20,6 +21,13 @@ private:
 
 public:
     int OPUS_FRAME_SIZE = 480;
+    opus_int32 OPUS_SAMPLE_RATE = 48000;
+    int CHANNELS = 2;
+    int last_opus_error;
+    OpusEncoder* opus_encoder;
+
+    VOIPInputCapture();
+    ~VOIPInputCapture();
 
     // Properties
 

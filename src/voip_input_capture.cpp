@@ -3,6 +3,14 @@
 using namespace godot;
 
 
+VOIPInputCapture::VOIPInputCapture(){
+    opus_encoder = opus_encoder_create(OPUS_SAMPLE_RATE, CHANNELS, OPUS_APPLICATION_VOIP, &last_opus_error);
+}
+
+VOIPInputCapture::~VOIPInputCapture(){
+    opus_encoder_destroy(opus_encoder);
+}
+
 void VOIPInputCapture::_bind_methods(){
 
 
