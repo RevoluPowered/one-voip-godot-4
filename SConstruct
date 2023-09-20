@@ -12,6 +12,8 @@ env = SConscript("godot-cpp/SConstruct")
 # - CPPDEFINES are for pre-processor defines
 # - LINKFLAGS are for linking flags
 
+sources = []
+
 
 # Opus (REQUIRES PRECOMPILE)
 
@@ -19,11 +21,17 @@ env.Append(CPPPATH=["thirdparty/opus/include"], LIBS=["thirdparty/opus/build/Rel
 env['LINKFLAGS'] = ['/WX:NO']
 
 
+# Opus Tools (speex resampler)
+
+env.Append(CPPPATH=["thirdparty/opus-tools/src"], CPPDEFINES={"OUTSIDE_SPEEX": None, "FLOATING_POINT": None, "RANDOM_PREFIX": "X3_EPIC_VOIP_PLUGIN"})
+sources += ["thirdparty/opus-tools/src/resample.c"]
+
+
 # OneVOIP Extension
 
 env.Append(CPPPATH=["include/"])
 env['CCPDBFLAGS'] = '/Zi /Fd${TARGET}.pdb'
-sources = Glob("src/*.cpp")
+sources += Glob("src/*.cpp")
 
 if env["platform"] == "macos":
     library = env.SharedLibrary(
