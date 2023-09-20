@@ -5,6 +5,7 @@
 
 #include "audio_stream_voip.h"
 #include "opus.h"
+#include "speex_resampler.h"
 
 
 namespace godot {
@@ -20,11 +21,17 @@ private:
     PackedByteArray _sample_buf_to_packet(PackedVector2Array samples);
 
 public:
-    int OPUS_FRAME_SIZE = 480;
-    opus_int32 OPUS_SAMPLE_RATE = 48000;
-    int CHANNELS = 2;
-    int last_opus_error;
-    OpusEncoder* opus_encoder;
+    const int GODOT_SAMPLE_RATE = 44100;
+    const int OPUS_FRAME_SIZE = 480;
+    const int OPUS_SAMPLE_RATE = 48000;
+    const int CHANNELS = 2;
+    const int RESAMPLING_QUALITY = 10; // 0 to 10
+
+    int _last_opus_error = 0;
+    int _last_resampler_error = 0;
+    OpusEncoder* _opus_encoder;
+    SpeexResamplerState* _resampler;
+    PackedFloat32Array _sample_buf; // Resample audio here before sending through opus
 
     VOIPInputCapture();
     ~VOIPInputCapture();
@@ -46,7 +53,7 @@ public:
 
     // Methods
 
-    void send_test_packet();
+    void send_test_packets();
 
 };
 
