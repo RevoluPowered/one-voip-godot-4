@@ -1,7 +1,7 @@
 #include "spsc_jitter_buffer.h"
 
-SPSCJitterBuffer::SPSCJitterBuffer(){
-    _speex_buffer = jitter_buffer_init(441);
+SPSCJitterBuffer::SPSCJitterBuffer(int frame_size){
+    _speex_buffer = jitter_buffer_init(frame_size);
 }
 
 SPSCJitterBuffer::~SPSCJitterBuffer(){
@@ -9,10 +9,10 @@ SPSCJitterBuffer::~SPSCJitterBuffer(){
 }
 
 
-void SPSCJitterBuffer::push_back(int timestamp, godot::PackedVector2Array samples){
+void SPSCJitterBuffer::push_samples(int timestamp, godot::PackedVector2Array samples){
 
 }
 
-godot::PackedVector2Array SPSCJitterBuffer::get_samples(int frames){
+godot::PackedVector2Array SPSCJitterBuffer::pop_samples(int frames){
     return godot::PackedVector2Array();
 }

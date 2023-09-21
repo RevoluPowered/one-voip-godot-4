@@ -11,11 +11,14 @@ protected:
     JitterBuffer* _speex_buffer;
 
 public:
-    SPSCJitterBuffer();
+    SPSCJitterBuffer(int frame_size);
     ~SPSCJitterBuffer();
 
-    void push_back(int timestamp, godot::PackedVector2Array samples);
-    godot::PackedVector2Array get_samples(int frames);
+    // Push samples here and the time they were received
+    void push_samples(int timestamp, godot::PackedVector2Array samples);
+
+    // Pop samples from here on the realtime audio thread
+    godot::PackedVector2Array pop_samples(int frames);
 };
 
 #endif

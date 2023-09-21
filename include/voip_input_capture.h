@@ -18,9 +18,17 @@ protected:
     static void _bind_methods();
 
 private:
+    int _last_opus_error = 0;
+    int _last_resampler_error = 0;
+    OpusEncoder* _opus_encoder;
+    SpeexResamplerState* _resampler;
+    PackedVector2Array _sample_buf; // Resample audio here before sending through opus
+
     PackedByteArray _sample_buf_to_packet(PackedVector2Array samples);
 
 public:
+    // Constants
+
     const int GODOT_SAMPLE_RATE = 44100;
     const int OPUS_FRAME_SIZE = 480;
     const int OPUS_SAMPLE_RATE = 48000;
@@ -29,14 +37,6 @@ public:
     const int OPUS_BITRATE = 24000; // bits / second from 500 to 512000
     const int EXPECTED_PACKET_LOSS = 5; // percentage from 0 to 100
 
-    int _last_opus_error = 0;
-    int _last_resampler_error = 0;
-    OpusEncoder* _opus_encoder;
-    SpeexResamplerState* _resampler;
-    PackedVector2Array _sample_buf; // Resample audio here before sending through opus
-
-    VOIPInputCapture();
-    ~VOIPInputCapture();
 
     // Properties
 
@@ -54,6 +54,9 @@ public:
 
 
     // Methods
+
+    VOIPInputCapture();
+    ~VOIPInputCapture();
 
     void send_test_packets();
 
