@@ -31,7 +31,7 @@ public:
     int _last_resampler_error = 0;
     OpusEncoder* _opus_encoder;
     SpeexResamplerState* _resampler;
-    PackedFloat32Array _sample_buf; // Resample audio here before sending through opus
+    PackedVector2Array _sample_buf; // Resample audio here before sending through opus
 
     VOIPInputCapture();
     ~VOIPInputCapture();

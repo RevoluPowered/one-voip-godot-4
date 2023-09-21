@@ -22,5 +22,5 @@ Ref<AudioStreamPlayback> AudioStreamVOIP::_instantiate_playback() const{
 }
 
 void AudioStreamVOIP::push_packet(const PackedByteArray& packet){
-    UtilityFunctions::print("Received samples: ", packet.size());
+    UtilityFunctions::print("Received bytes: ", packet.size());
 }

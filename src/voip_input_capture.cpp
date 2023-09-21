@@ -1,12 +1,15 @@
 #include "voip_input_capture.h"
 
+#include <godot_cpp/variant/utility_functions.hpp>
+#include <cassert>
+
 using namespace godot;
 
 
 VOIPInputCapture::VOIPInputCapture(){
     _opus_encoder = opus_encoder_create(OPUS_SAMPLE_RATE, CHANNELS, OPUS_APPLICATION_VOIP, &_last_opus_error);
     _resampler = speex_resampler_init(CHANNELS, GODOT_SAMPLE_RATE, OPUS_SAMPLE_RATE, RESAMPLING_QUALITY, &_last_resampler_error);
-    if (_resampler == NULL) ; // ...
+    assert( _resampler != NULL );
     _sample_buf.resize(OPUS_FRAME_SIZE);
 }
 
@@ -74,8 +77,8 @@ void VOIPInputCapture::send_test_packets(){
 
 
 PackedByteArray VOIPInputCapture::_sample_buf_to_packet(PackedVector2Array samples){
-    // ASSERT( _sample_buf.size() == OPUS_FRAME_SIZE );
-    // ASSERT( samples.size() == OPUS_FRAME_SIZE * GODOT_SAMPLE_RATE / OPUS_SAMPLE_RATE );
+    assert( _sample_buf.size() == OPUS_FRAME_SIZE );
+    assert( samples.size() == OPUS_FRAME_SIZE * GODOT_SAMPLE_RATE / OPUS_SAMPLE_RATE );
 
     PackedByteArray packet;
     packet.resize( sizeof(float) * CHANNELS * OPUS_FRAME_SIZE );
@@ -83,10 +86,10 @@ PackedByteArray VOIPInputCapture::_sample_buf_to_packet(PackedVector2Array sampl
     unsigned int num_samples = samples.size();
     unsigned int num_buffer_samples = OPUS_FRAME_SIZE;
     int resampling_result = speex_resampler_process_interleaved_float(_resampler, (float*) samples.ptr(), &num_samples, (float*) _sample_buf.ptr(), &num_buffer_samples);
-    if (resampling_result != 0) ; // ...
+    assert( resampling_result == 0 );
 
     int packet_size = opus_encode_float(_opus_encoder, (float*) _sample_buf.ptr(), OPUS_FRAME_SIZE, (unsigned char*) packet.ptr(), packet.size());
-    if (packet_size < 0) ; // ...
+    assert( packet_size > 0 );
     packet.resize( packet_size );
 
     return packet;

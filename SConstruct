@@ -31,6 +31,7 @@ sources += ["thirdparty/opus-tools/src/resample.c"]
 
 env.Append(CPPPATH=["include/"])
 env['CCPDBFLAGS'] = '/Zi /Fd${TARGET}.pdb'
+# env.Append(CPPDEFINES={"NDEBUG": None}) # For release builds
 sources += Glob("src/*.cpp")
 
 if env["platform"] == "macos":
