@@ -29,6 +29,11 @@ env.Append(CPPDEFINES={"USE_SSE": None, "USE_SSE2": None, "FLOATING_POINT": None
 sources += ["thirdparty/speex/libspeexdsp/resample.c", "thirdparty/speex/libspeexdsp/jitter.c"]
 
 
+# etc
+
+env.Append(CPPPATH=["thirdparty"])
+
+
 # OneVOIP Extension
 
 env.Append(CPPPATH=["include/"])
