@@ -21,10 +21,12 @@ env.Append(CPPPATH=["thirdparty/opus/include"], LIBS=["thirdparty/opus/build/Rel
 env['LINKFLAGS'] = ['/WX:NO']
 
 
-# Opus Tools (speex resampler)
+# Speex (resampler / jitter buffer)
 
-env.Append(CPPPATH=["thirdparty/opus-tools/src"], CPPDEFINES={"OUTSIDE_SPEEX": None, "FLOATING_POINT": None, "RANDOM_PREFIX": "X3_EPIC_VOIP_PLUGIN"})
-sources += ["thirdparty/opus-tools/src/resample.c"]
+env.Append(CPPPATH=["thirdparty/speex/include"])
+# v Windows settings
+env.Append(CPPDEFINES={"USE_SSE": None, "USE_SSE2": None, "FLOATING_POINT": None, "USE_SMALLFT": None}) # "EXPORT": None ?
+sources += ["thirdparty/speex/libspeexdsp/resample.c", "thirdparty/speex/libspeexdsp/jitter.c"]
 
 
 # OneVOIP Extension

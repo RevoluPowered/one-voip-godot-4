@@ -69,7 +69,7 @@ static void speex_free(void *ptr) {free(ptr);}
 #ifndef EXPORT
 #define EXPORT
 #endif
-#include "speex_resampler.h"
+#include "speex/speex_resampler.h"
 #include "arch.h"
 #else /* OUTSIDE_SPEEX */
 
@@ -96,7 +96,7 @@ static void speex_free(void *ptr) {free(ptr);}
 #define UINT32_MAX 4294967295U
 #endif
 
-#if defined(__SSE__) && !defined(FIXED_POINT)
+#ifdef USE_SSE
 #include "resample_sse.h"
 #endif
 

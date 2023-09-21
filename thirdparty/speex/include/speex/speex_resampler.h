@@ -90,6 +90,8 @@
 
 #endif /* OUTSIDE_SPEEX */
 
+#define EXPORT
+
 #ifdef __cplusplus
 extern "C" {
 #endif
