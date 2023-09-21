@@ -5,7 +5,7 @@
 
 #include "audio_stream_voip.h"
 #include "opus.h"
-#include "speex_resampler.h"
+#include "speex/speex_resampler.h"
 
 
 namespace godot {
@@ -26,6 +26,8 @@ public:
     const int OPUS_SAMPLE_RATE = 48000;
     const int CHANNELS = 2;
     const int RESAMPLING_QUALITY = 10; // 0 to 10
+    const int OPUS_BITRATE = 24000; // bits / second from 500 to 512000
+    const int EXPECTED_PACKET_LOSS = 5; // percentage from 0 to 100
 
     int _last_opus_error = 0;
     int _last_resampler_error = 0;
