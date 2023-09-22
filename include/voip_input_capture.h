@@ -34,7 +34,7 @@ public:
     const int OPUS_SAMPLE_RATE = 48000;
     const int CHANNELS = 2;
     const int RESAMPLING_QUALITY = 10; // 0 to 10
-    const int OPUS_BITRATE = 24000; // bits / second from 500 to 512000
+    const int DEFAULT_BITRATE = 24000; // bits / second from 500 to 512000
     const int EXPECTED_PACKET_LOSS = 5; // percentage from 0 to 100
 
 
@@ -51,6 +51,9 @@ public:
 
     void set_volume(const float _volume) { volume = _volume; } // Error condition for outside [0,1]?
     float get_volume() const { return volume; }
+
+    void set_bitrate(const int _bitrate);
+    int get_bitrate() const;
 
 
     // Methods

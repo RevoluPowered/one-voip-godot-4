@@ -8,9 +8,7 @@ using namespace godot;
 
 VOIPInputCapture::VOIPInputCapture(){
     _opus_encoder = opus_encoder_create(OPUS_SAMPLE_RATE, CHANNELS, OPUS_APPLICATION_VOIP, &_last_opus_error);
-    opus_encoder_ctl(_opus_encoder, OPUS_SET_BITRATE(OPUS_BITRATE));
-    //opus_encoder_ctl(_opus_encoder, OPUS_SET_INBAND_FEC(1));
-    //opus_encoder_ctl(_opus_encoder, OPUS_SET_PACKET_LOSS_PERC(EXPECTED_PACKET_LOSS));
+    opus_encoder_ctl(_opus_encoder, OPUS_SET_BITRATE(DEFAULT_BITRATE));
 
     _resampler = speex_resampler_init(CHANNELS, GODOT_SAMPLE_RATE, OPUS_SAMPLE_RATE, RESAMPLING_QUALITY, &_last_resampler_error);
     assert( _resampler != NULL );
@@ -39,6 +37,9 @@ void VOIPInputCapture::_bind_methods(){
     ClassDB::bind_method(D_METHOD("set_volume", "volume"), &VOIPInputCapture::set_volume);
     ClassDB::bind_method(D_METHOD("get_volume"), &VOIPInputCapture::get_volume);
 
+    ClassDB::bind_method(D_METHOD("set_bitrate", "bitrate"), &VOIPInputCapture::set_bitrate);
+    ClassDB::bind_method(D_METHOD("get_bitrate"), &VOIPInputCapture::get_bitrate);
+
 
     // Properties
 
@@ -54,6 +55,13 @@ void VOIPInputCapture::_bind_methods(){
         PropertyInfo(Variant::FLOAT, "volume", godot::PROPERTY_HINT_NONE, "", 6U, "float"),
         "set_volume",
         "get_volume"
+    );
+
+    ClassDB::add_property(
+        "VOIPInputCapture",
+        PropertyInfo(Variant::INT, "bitrate", godot::PROPERTY_HINT_NONE, "", 6U, "int"),
+        "set_bitrate",
+        "get_bitrate"
     );
 
 
@@ -98,4 +106,15 @@ PackedByteArray VOIPInputCapture::_sample_buf_to_packet(PackedVector2Array sampl
     packet.resize( packet_size );
 
     return packet;
+}
+
+
+void VOIPInputCapture::set_bitrate(const int _bitrate){
+    opus_encoder_ctl(_opus_encoder, OPUS_SET_BITRATE(_bitrate));
+}
+
+int VOIPInputCapture::get_bitrate() const{
+    int ret;
+    opus_encoder_ctl(_opus_encoder, OPUS_GET_BITRATE(&ret));
+    return ret;
 }
