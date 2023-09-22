@@ -9,8 +9,8 @@ using namespace godot;
 VOIPInputCapture::VOIPInputCapture(){
     _opus_encoder = opus_encoder_create(OPUS_SAMPLE_RATE, CHANNELS, OPUS_APPLICATION_VOIP, &_last_opus_error);
     opus_encoder_ctl(_opus_encoder, OPUS_SET_BITRATE(OPUS_BITRATE));
-    opus_encoder_ctl(_opus_encoder, OPUS_SET_INBAND_FEC(1));
-    opus_encoder_ctl(_opus_encoder, OPUS_SET_PACKET_LOSS_PERC(EXPECTED_PACKET_LOSS));
+    //opus_encoder_ctl(_opus_encoder, OPUS_SET_INBAND_FEC(1));
+    //opus_encoder_ctl(_opus_encoder, OPUS_SET_PACKET_LOSS_PERC(EXPECTED_PACKET_LOSS));
 
     _resampler = speex_resampler_init(CHANNELS, GODOT_SAMPLE_RATE, OPUS_SAMPLE_RATE, RESAMPLING_QUALITY, &_last_resampler_error);
     assert( _resampler != NULL );

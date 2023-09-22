@@ -40,7 +40,7 @@ Ref<AudioStreamPlayback> AudioStreamVOIP::_instantiate_playback() const{
 }
 
 void AudioStreamVOIP::push_packet(const PackedByteArray& packet){
-    UtilityFunctions::print("Received bytes: ", packet.size());
+    // UtilityFunctions::print("Received bytes: ", packet.size());
 
     // Convert to PackedVector2Array in 44100 kHz
 
