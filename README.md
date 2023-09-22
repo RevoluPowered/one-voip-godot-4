@@ -3,7 +3,10 @@
 Add voice chat to your game in minutes!
 
 Features:
-- Opus compression
+- Uses native godot bus effects and audio streams ✅
+- Opus compression ✅
+- Jitter buffer 🚧
+- Echo cancelling 🚧
 
 
 ## How to Use
