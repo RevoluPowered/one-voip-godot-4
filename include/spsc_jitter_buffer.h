@@ -6,20 +6,27 @@
 
 #include "spsc_queue.hpp"
 
+
+namespace godot {
+
+
 class SPSCJitterBuffer{
 
 protected:
-    deaod::spsc_queue<godot::Vector2, 4096> sample_queue;
+    deaod::spsc_queue<Vector2, 4096> sample_queue;
 
 public:
     SPSCJitterBuffer(int frame_size);
     ~SPSCJitterBuffer();
 
     // Push samples here and the time they were received
-    void push_samples(int timestamp, godot::PackedVector2Array samples);
+    void push_samples(int timestamp, PackedVector2Array samples);
 
     // Pop samples from here on the realtime audio thread
-    void SPSCJitterBuffer::pop_samples(godot::AudioFrame* samples, int frames);
+    void SPSCJitterBuffer::pop_samples(AudioFrame* samples, int frames);
 };
+
+
+}
 
 #endif
