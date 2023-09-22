@@ -1,41 +1,44 @@
-## VOIP One for Godot 4
+# VoIP extension for Godot 4
 
-A plugin which allows you to implement voice chat into your game.
+Add voice chat to your game in minutes!
 
-**We are aiming to have the following features:**
-- Drop in and use it right away, no insane complex rocket calculations to configure it. 🚀
-- Opus codec support
-- Mute support for individual speakers or global
-- Echo cancellation
-- Sensible default settings
-- Simplified examples under /examples/
-- Optional ability to stream and play arbitrary streams to clients (stretch goal)
+Features:
+- Opus compression
 
-**Is it a module or a gdextension:**
-- It will be both
 
-**Usability:**
-- *Must* have documentation
-- Ideally works on all platforms godot supports
+## How to Use
 
-**Nodes:**
+Install webrtc-native by downloading [the latest release](https://github.com/godotengine/webrtc-native/releases) and dragging the webrtc-native folder into your godot project's root folder
 
-Simple to use nodes:
-- VoIPAudioStreamPlayer2D - 3D positional
-- VoIPAudioStreamPlayer2D - 2D positional
-- VoIPAudioStreamPlayer - non positional
+Install one-voip by downloading [the latest release](https://github.com/RevoluPowered/one-voip-godot-4/releases) and dragging the one-voip folder into your godot project's root folder
 
-Advanced nodes - which can be used for custom cases (like sending arbitrary non mic input) 
-- VoIPCapture extends AudioEffectCapture - microphone input
-- VoIPAudioStream extends AudioStream
+Spawn in a new bus in your project's audio mixer for your microphone, mute the bus (unless you want to listen to yourself), and add an VOIPInputCapture.
 
-**Settings:**
-- Use separate networking thread or audio thread, or both.
+Add an AudioStreamPlayer somewhere in the scene, add a new AudioStreamMicrophone as the stream, set the Bus to the one you made (e.g. in the demo it's called "Mic") and turn on autoplay.
 
-**Networking:**
-- We will look at using PacketPeer for handling our networking so that the implementation of the network is split from the plugin.
-- Godot has done the heavy lifting here so we should just re-use `PacketPeer`
+To send audio, connect a function to the packet_ready signal on the effect:
+```
+var idx = AudioServer.get_bus_index("Mic")
+var effect = AudioServer.get_bus_effect(idx, 0)
+effect.packet_ready.connect(_on_packet_ready)
+```
+And send the packet using any method you like in the _on_packet_ready function.
 
-**Documentation:**
-- Should provide a very short 5 line explanation of how to use it
-- Should have a docs page for the complex portions
+To receive audio, instantiate an AudioStreamVOIP every time a peer connects, add it to some kind of audio stream player, and MAKE SURE you play it. When you receive a packet, figure out what user sent it, and then push it to their AudioStreamVOIP:
+```
+stream.push_packet(packet)
+```
+
+Check out the demos for a full example.
+
+## Compiling
+
+### Windows
+
+In thirdparty/opus: `cmake -Bbuild`
+
+In thirdparty/opus/build: `msbuild Opus.sln /p:Configuration=Release`
+
+In the project root: `scons`
+
+This will build to demo_rtc/bin
