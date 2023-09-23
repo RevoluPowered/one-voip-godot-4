@@ -9,11 +9,11 @@ Features:
 - Echo cancelling 🚧
 
 Builds for:
-- Windows ✅
-- Web 🚧
+- [Windows](#windows) ✅
 - Linux 🚧
 - Android 🚧
 - Mac 🚧
+- Web 🚧
 
 ## How to Use
 
@@ -44,6 +44,8 @@ Check out the demos for a full example.
 
 ### Windows
 
+Install CMake and Visual Studio build tools (MinGW will also work, instructions are for MSBuild)
+
 In thirdparty/opus: `cmake -Bbuild`
 
 In thirdparty/opus/build: `msbuild Opus.sln /p:Configuration=Release`
@@ -51,3 +53,13 @@ In thirdparty/opus/build: `msbuild Opus.sln /p:Configuration=Release`
 In the project root: `scons`
 
 This will build to demo_rtc/bin
+
+### Web (STILL BROKEN ON GODOT 4)
+
+Install emscripten (chocolatey can help with dependencies: `choco install emscripten`)
+
+In thirdparty/opus: `emcmake cmake -Bbuild`
+
+In thirdparty/opus/build: `make`
+
+In the project root: `scons platform=javascript`

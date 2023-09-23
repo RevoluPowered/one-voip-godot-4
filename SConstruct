@@ -17,8 +17,11 @@ sources = []
 
 # Opus (REQUIRES PRECOMPILE)
 
-env.Append(CPPPATH=["thirdparty/opus/include"], LIBS=["thirdparty/opus/build/Release/opus.lib"])
-env['LINKFLAGS'] = ['/WX:NO']
+if env["platform"] == "windows":
+    env.Append(CPPPATH=["thirdparty/opus/include"], LIBS=["thirdparty/opus/build/Release/opus.lib"])
+    env['LINKFLAGS'] = ['/WX:NO']
+elif env["platform"] == "javascript":
+    env.Append(CPPPATH=["thirdparty/opus/include"], LIBS=["thirdparty/opus/build/libopus.a"])
 
 
 # Speex (resampler / jitter buffer)
