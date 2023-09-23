@@ -8,6 +8,12 @@ Features:
 - Jitter buffer 🚧
 - Echo cancelling 🚧
 
+Builds for:
+- Windows ✅
+- Web 🚧
+- Linux 🚧
+- Android 🚧
+- Mac 🚧
 
 ## How to Use
 
