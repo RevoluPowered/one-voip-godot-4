@@ -4,6 +4,10 @@
 #include <godot_cpp/classes/audio_stream.hpp>
 #include <godot_cpp/classes/audio_stream_playback.hpp>
 
+#include "opus.h"
+#include "spsc_jitter_buffer.h"
+#include "speex/speex_resampler.h"
+
 
 namespace godot {
 
@@ -14,10 +18,30 @@ class AudioStreamVOIP : public AudioStream {
 private:
     friend class AudioStreamPlaybackVOIP;
 
+    int _last_opus_error = 0;
+    int _last_resampler_error = 0;
+    OpusDecoder* _opus_decoder;
+    SpeexResamplerState* _resampler;
+    PackedVector2Array _sample_buf;
+
 protected:
     static void _bind_methods();
 
 public:
+    // Constants
+
+    const int GODOT_SAMPLE_RATE = 44100;
+    const int OPUS_FRAME_SIZE = 480;
+    const int OPUS_SAMPLE_RATE = 48000;
+    const int CHANNELS = 2;
+    const int RESAMPLING_QUALITY = 10; // 0 to 10
+
+
+    // Properties
+
+    SPSCJitterBuffer jitter_buffer;
+
+
     // Overrides
 
     virtual Ref<AudioStreamPlayback> _instantiate_playback() const override;
@@ -30,6 +54,9 @@ public:
 
 
     // Methods
+
+    AudioStreamVOIP();
+    ~AudioStreamVOIP();
 
     void push_packet(const PackedByteArray&);
 

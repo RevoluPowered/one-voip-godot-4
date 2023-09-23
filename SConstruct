@@ -12,10 +12,34 @@ env = SConscript("godot-cpp/SConstruct")
 # - CPPDEFINES are for pre-processor defines
 # - LINKFLAGS are for linking flags
 
-# tweak this if you want to use different folders, or more folders, to store your source code in.
+sources = []
+
+
+# Opus (REQUIRES PRECOMPILE)
+
+env.Append(CPPPATH=["thirdparty/opus/include"], LIBS=["thirdparty/opus/build/Release/opus.lib"])
+env['LINKFLAGS'] = ['/WX:NO']
+
+
+# Speex (resampler / jitter buffer)
+
+env.Append(CPPPATH=["thirdparty/speex/include"])
+# v Windows settings
+env.Append(CPPDEFINES={"USE_SSE": None, "USE_SSE2": None, "FLOATING_POINT": None, "USE_SMALLFT": None}) # "EXPORT": None ?
+sources += ["thirdparty/speex/libspeexdsp/resample.c", "thirdparty/speex/libspeexdsp/jitter.c"]
+
+
+# etc
+
+env.Append(CPPPATH=["thirdparty"])
+
+
+# OneVOIP Extension
+
 env.Append(CPPPATH=["include/"])
 env['CCPDBFLAGS'] = '/Zi /Fd${TARGET}.pdb'
-sources = Glob("src/*.cpp")
+# env.Append(CPPDEFINES={"NDEBUG": None}) # For release builds
+sources += Glob("src/*.cpp")
 
 if env["platform"] == "macos":
     library = env.SharedLibrary(

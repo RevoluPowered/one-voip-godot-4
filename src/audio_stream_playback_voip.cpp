@@ -19,5 +19,7 @@ bool AudioStreamPlaybackVOIP::_is_playing() const{
 // DO NOT MUTEX LOCK
 // DO NOT MALLOC/NEW
 int32_t AudioStreamPlaybackVOIP::_mix(AudioFrame *buffer, double rate_scale, int32_t frames){
-    return 0; //TODO
+    base->jitter_buffer.pop_samples(buffer, frames);
+
+    return frames;
 }
