@@ -20,14 +20,13 @@ sources = []
 if env["platform"] == "windows":
     env.Append(CPPPATH=["thirdparty/opus/include"], LIBS=["thirdparty/opus/build/Release/opus.lib"])
     env['LINKFLAGS'] = ['/WX:NO']
-elif env["platform"] == "javascript":
-    env.Append(CPPPATH=["thirdparty/opus/include"], LIBS=["thirdparty/opus/build/libopus.a"])
+elif env["platform"] == "linux" or env["platform"] == "javascript":
+    env.Append(CPPPATH=["thirdparty/opus/include"], LIBS=["opus"], LIBPATH="thirdparty/opus/build")
 
 
 # Speex (resampler / jitter buffer)
 
 env.Append(CPPPATH=["thirdparty/speex/include"])
-# v Windows settings
 env.Append(CPPDEFINES={"USE_SSE": None, "USE_SSE2": None, "FLOATING_POINT": None, "USE_SMALLFT": None}) # "EXPORT": None ?
 sources += ["thirdparty/speex/libspeexdsp/resample.c", "thirdparty/speex/libspeexdsp/jitter.c"]
 
@@ -39,9 +38,11 @@ env.Append(CPPPATH=["thirdparty"])
 
 # OneVOIP Extension
 
-env.Append(CPPPATH=["include/"])
-env['CCPDBFLAGS'] = '/Zi /Fd${TARGET}.pdb'
+if env["platform"] == "windows":
+    env['CCPDBFLAGS'] = '/Zi /Fd${TARGET}.pdb'
+
 # env.Append(CPPDEFINES={"NDEBUG": None}) # For release builds
+env.Append(CPPPATH=["include/"])
 sources += Glob("src/*.cpp")
 
 if env["platform"] == "macos":
