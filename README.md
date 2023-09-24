@@ -13,7 +13,7 @@ Builds for:
 - Linux 🚧
 - Android 🚧
 - Mac 🚧
-- Web 🚧
+- [Web](#web-still-broken-on-godot-4) 🚧
 
 ## How to Use
 
