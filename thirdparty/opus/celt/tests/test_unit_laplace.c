@@ -31,8 +31,8 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#define CELT_C
 #include "laplace.h"
+#define CELT_C
 #include "stack_alloc.h"
 
 #include "entenc.c"
