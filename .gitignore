@@ -15,4 +15,6 @@ addons.zip
 *.o
 *.exp
 *.lib
+*.exe
+export_presets.cfg
 __pycache__

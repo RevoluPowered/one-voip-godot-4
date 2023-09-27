@@ -4,7 +4,7 @@
 #include <godot_cpp/classes/packed_data_container.hpp>
 #include <godot_cpp/classes/audio_frame.hpp>
 
-#include "spsc_queue.hpp"
+#include "ring_buffer.h"
 
 
 namespace godot {
@@ -13,7 +13,7 @@ namespace godot {
 class SPSCJitterBuffer{
 
 protected:
-    deaod::spsc_queue<Vector2, 4096> sample_queue;
+    RingBuffer<Vector2> sample_queue;
 
 public:
     SPSCJitterBuffer(int frame_size);
