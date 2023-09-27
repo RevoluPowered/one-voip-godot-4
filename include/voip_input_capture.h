@@ -4,7 +4,7 @@
 #include <godot_cpp/classes/audio_effect_capture.hpp>
 
 #include "audio_stream_voip.h"
-#include "../thirdparty/opus/include/opus.h"
+#include "../thirdparty/opus/opus/opus.h"
 #include "speex/speex_resampler.h"
 
 
