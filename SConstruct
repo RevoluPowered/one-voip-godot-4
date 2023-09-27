@@ -66,7 +66,7 @@ module_module_env.Prepend(CPPPATH=["thirdparty/opus"])
 module_module_env.Prepend(CPPPATH=["thirdparty/opus/opus"])
 module_module_env.Prepend(CPPPATH=["include"])
 
-thirdparty_dir = "thirdparty/opus/"
+thirdparty_dir = "thirdparty/opus/src/"
 thirdparty_sources = [
     # Sync with opus_sources.mk
     "opus.c",
