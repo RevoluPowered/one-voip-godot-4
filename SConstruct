@@ -19,7 +19,7 @@ sources = []
 
 if env["platform"] == "windows":
     env.Append(CPPPATH=["thirdparty/opus/include"], LIBS=["thirdparty/opus/build/Release/opus.lib"])
-    env['LINKFLAGS'] = ['/WX:NO']
+    env.Append(LINKFLAGS = ['/WX:NO'])
 elif env["platform"] == "linux" or env["platform"] == "javascript":
     env.Append(CPPPATH=["thirdparty/opus/include"], LIBS=["opus"], LIBPATH="thirdparty/opus/build")
 

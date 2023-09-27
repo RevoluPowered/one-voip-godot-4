@@ -58,7 +58,7 @@ This will build to demo_rtc/bin
 
 [Possible Dependencies](https://docs.godotengine.org/en/stable/contributing/development/compiling/compiling_for_linuxbsd.html)
 
-In thirdparty/opus: `cmake -Bbuild`
+In thirdparty/opus: `cmake -Bbuild -DCMAKE_POSITION_INDEPENDENT_CODE=ON`
 
 In thirdparty/opus/build: `make`
 
