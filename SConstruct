@@ -22,6 +22,7 @@ if env["platform"] == "windows":
     env.Append(LINKFLAGS = ['/WX:NO'])
 elif env["platform"] == "linux" or env["platform"] == "javascript":
     env.Append(CPPPATH=["thirdparty/opus/include"], LIBS=["opus"], LIBPATH="thirdparty/opus/build")
+    env.Append(CXXFLAGS = ['-fpermissive'])
 
 
 # Speex (resampler / jitter buffer)

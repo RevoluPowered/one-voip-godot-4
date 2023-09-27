@@ -98,10 +98,10 @@ PackedByteArray VOIPInputCapture::_sample_buf_to_packet(PackedVector2Array sampl
 
     unsigned int num_samples = samples.size();
     unsigned int num_buffer_samples = OPUS_FRAME_SIZE;
-    int resampling_result = speex_resampler_process_interleaved_float(_resampler, (float*) samples.ptr(), &num_samples, (float*) _sample_buf.ptr(), &num_buffer_samples);
+    int resampling_result = speex_resampler_process_interleaved_float(_resampler, (float*) samples.ptr(), &num_samples, (float*) _sample_buf.ptrw(), &num_buffer_samples);
     assert( resampling_result == 0 );
 
-    int packet_size = opus_encode_float(_opus_encoder, (float*) _sample_buf.ptr(), OPUS_FRAME_SIZE, (unsigned char*) packet.ptr(), packet.size());
+    int packet_size = opus_encode_float(_opus_encoder, (float*) _sample_buf.ptr(), OPUS_FRAME_SIZE, (unsigned char*) packet.ptrw(), packet.size());
     assert( packet_size > 0 );
     packet.resize( packet_size );
 

@@ -19,7 +19,7 @@ void SPSCJitterBuffer::push_samples(int timestamp, PackedVector2Array samples){
         UtilityFunctions::print("TOO MANY SAMPLES - samples: ", samples.size(), " written: ", num_written);
         PackedVector2Array temp;
         temp.resize(2048);
-        sample_queue.read(temp.size(), (Vector2*) temp.ptr()); // Skip forward
+        sample_queue.read(temp.size(), temp.ptrw()); // Skip forward
     }
     // UtilityFunctions::print("num_written: ",num_written);
 }

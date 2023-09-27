@@ -44,7 +44,7 @@ Check out the demos for a full example.
 
 ### Windows
 
-Install CMake and Visual Studio build tools (MinGW will also work, instructions are for MSBuild)
+Install CMake and Visual Studio build tools (MinGW will also work by modifying the opus path in SConstruct, instructions are for MSBuild)
 
 In thirdparty/opus: `cmake -Bbuild`
 
