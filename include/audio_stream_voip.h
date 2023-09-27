@@ -4,7 +4,7 @@
 #include <godot_cpp/classes/audio_stream.hpp>
 #include <godot_cpp/classes/audio_stream_playback.hpp>
 
-#include "opus.h"
+#include "../thirdparty/opus/include/opus.h"
 #include "spsc_jitter_buffer.h"
 #include "speex/speex_resampler.h"
 

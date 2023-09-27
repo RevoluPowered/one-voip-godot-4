@@ -23,7 +23,7 @@ public:
     void push_samples(int timestamp, PackedVector2Array samples);
 
     // Pop samples from here on the realtime audio thread
-    void SPSCJitterBuffer::pop_samples(AudioFrame* samples, int frames);
+    void pop_samples(AudioFrame* samples, int frames);
 };
 
 

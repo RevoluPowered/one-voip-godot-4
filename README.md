@@ -46,9 +46,9 @@ Check out the demos for a full example.
 
 Install CMake and Visual Studio build tools (MinGW will also work, instructions are for MSBuild)
 
-In thirdparty/opus: `cmake -Bbuild`
+In thirdparty/opus: `cmake -Bbuild -GNinja`
 
-In thirdparty/opus/build: `msbuild Opus.sln /p:Configuration=Release`
+In thirdparty/opus/build: `cd build && ninja`
 
 In the project root: `scons`
 

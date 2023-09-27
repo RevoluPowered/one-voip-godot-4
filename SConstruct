@@ -14,45 +14,290 @@ env = SConscript("godot-cpp/SConstruct")
 
 sources = []
 
-
-# Opus (REQUIRES PRECOMPILE)
-
-if env["platform"] == "windows":
-    env.Append(CPPPATH=["thirdparty/opus/include"], LIBS=["thirdparty/opus/build/Release/opus.lib"])
-    env['LINKFLAGS'] = ['/WX:NO']
-elif env["platform"] == "javascript":
-    env.Append(CPPPATH=["thirdparty/opus/include"], LIBS=["thirdparty/opus/build/libopus.a"])
-
-
 # Speex (resampler / jitter buffer)
 
 env.Append(CPPPATH=["thirdparty/speex/include"])
 # v Windows settings
 env.Append(CPPDEFINES={"USE_SSE": None, "USE_SSE2": None, "FLOATING_POINT": None, "USE_SMALLFT": None}) # "EXPORT": None ?
-sources += ["thirdparty/speex/libspeexdsp/resample.c", "thirdparty/speex/libspeexdsp/jitter.c"]
-
+sources += ["thirdparty/speex/libspeexdsp/resample.c", "thirdparty/speex/libspeexdsp/jitter.c",
+"thirdparty/libogg/bitwise.c", "thirdparty/libogg/framing.c", ]
 
 # etc
 
 env.Append(CPPPATH=["thirdparty"])
 
 
+module_module_env = env.Clone()
+
+if not env["platform"] == "windows":
+    module_module_env.Append(CCFLAGS=["-Wno-error=non-virtual-dtor"])
+    module_module_env.Append(CCFLAGS=["-Wno-error=ctor-dtor-privacy"])
+
+module_module_env.Append(
+    CPPDEFINES=[
+        "HAVE_CONFIG_H",
+        "PACKAGE=",
+        "VERSION=",
+        "CPU_CLIPS_POSITIVE=0",
+        "CPU_CLIPS_NEGATIVE=0",
+        "WEBRTC_APM_DEBUG_DUMP=0",
+    ]
+)
+
+enable_webrtc_logging = env["target"] == "debug"
+
+if not enable_webrtc_logging:
+    module_module_env.Append(CPPDEFINES=["RTC_DISABLE_LOGGING", "RTC_DISABLE_METRICS"])
+
+if env["platform"] == "windows" or env["platform"] == "uwp":
+    module_module_env.Append(CPPDEFINES=["WEBRTC_WIN"])
+elif env["platform"] == "ios":
+    module_module_env.Append(CPPDEFINES=["WEBRTC_POSIX", "WEBRTC_IOS"])
+elif env["platform"] == "macos":
+    module_module_env.Append(CPPDEFINES=["WEBRTC_POSIX", "WEBRTC_MAC"])
+elif env["platform"] == "linuxbsd":
+    module_module_env.Append(CPPDEFINES=["WEBRTC_POSIX", "WEBRTC_LINUX"])
+elif env["platform"] == "android":
+    module_module_env.Append(CPPDEFINES=["WEBRTC_POSIX", "WEBRTC_ANDROID"])
+else:  # including if env["platform"] == "javascript":
+    module_module_env.Append(CPPDEFINES=["WEBRTC_POSIX"])
+
+module_module_env.Prepend(CPPPATH=["thirdparty/opus"])
+module_module_env.Prepend(CPPPATH=["thirdparty/opus/opus"])
+module_module_env.Prepend(CPPPATH=["include"])
+
+thirdparty_dir = "thirdparty/opus/"
+thirdparty_sources = [
+    # Sync with opus_sources.mk
+    "opus.c",
+    "opus_decoder.c",
+    "opus_encoder.c",
+    "opus_multistream.c",
+    "opus_multistream_encoder.c",
+    "opus_multistream_decoder.c",
+    "repacketizer.c",
+    "analysis.c",
+    "mlp.c",
+    "mlp_data.c",
+    # Sync with libopusfile Makefile.am
+    "info.c",
+    "internal.c",
+    "opusfile.c",
+    "stream.c",
+    # Sync with celt_sources.mk
+    "celt/bands.c",
+    "celt/celt.c",
+    "celt/celt_encoder.c",
+    "celt/celt_decoder.c",
+    "celt/cwrs.c",
+    "celt/entcode.c",
+    "celt/entdec.c",
+    "celt/entenc.c",
+    "celt/kiss_fft.c",
+    "celt/laplace.c",
+    "celt/mathops.c",
+    "celt/mdct.c",
+    "celt/modes.c",
+    "celt/pitch.c",
+    "celt/celt_lpc.c",
+    "celt/quant_bands.c",
+    "celt/rate.c",
+    "celt/vq.c",
+    # "celt/arm/arm_celt_map.c",
+    # "celt/arm/armcpu.c",
+    # "celt/arm/celt_ne10_fft.c",
+    # "celt/arm/celt_ne10_mdct.c",
+    # "celt/arm/celt_neon_intr.c",
+    # Sync with silk_sources.mk
+    "silk/CNG.c",
+    "silk/code_signs.c",
+    "silk/init_decoder.c",
+    "silk/decode_core.c",
+    "silk/decode_frame.c",
+    "silk/decode_parameters.c",
+    "silk/decode_indices.c",
+    "silk/decode_pulses.c",
+    "silk/decoder_set_fs.c",
+    "silk/dec_API.c",
+    "silk/enc_API.c",
+    "silk/encode_indices.c",
+    "silk/encode_pulses.c",
+    "silk/gain_quant.c",
+    "silk/interpolate.c",
+    "silk/LP_variable_cutoff.c",
+    "silk/NLSF_decode.c",
+    "silk/NSQ.c",
+    "silk/NSQ_del_dec.c",
+    "silk/PLC.c",
+    "silk/shell_coder.c",
+    "silk/tables_gain.c",
+    "silk/tables_LTP.c",
+    "silk/tables_NLSF_CB_NB_MB.c",
+    "silk/tables_NLSF_CB_WB.c",
+    "silk/tables_other.c",
+    "silk/tables_pitch_lag.c",
+    "silk/tables_pulses_per_block.c",
+    "silk/VAD.c",
+    "silk/control_audio_bandwidth.c",
+    "silk/quant_LTP_gains.c",
+    "silk/VQ_WMat_EC.c",
+    "silk/HP_variable_cutoff.c",
+    "silk/NLSF_encode.c",
+    "silk/NLSF_VQ.c",
+    "silk/NLSF_unpack.c",
+    "silk/NLSF_del_dec_quant.c",
+    "silk/process_NLSFs.c",
+    "silk/stereo_LR_to_MS.c",
+    "silk/stereo_MS_to_LR.c",
+    "silk/check_control_input.c",
+    "silk/control_SNR.c",
+    "silk/init_encoder.c",
+    "silk/control_codec.c",
+    "silk/A2NLSF.c",
+    "silk/ana_filt_bank_1.c",
+    "silk/biquad_alt.c",
+    "silk/bwexpander_32.c",
+    "silk/bwexpander.c",
+    "silk/debug.c",
+    "silk/decode_pitch.c",
+    "silk/inner_prod_aligned.c",
+    "silk/lin2log.c",
+    "silk/log2lin.c",
+    "silk/LPC_analysis_filter.c",
+    "silk/LPC_inv_pred_gain.c",
+    "silk/table_LSF_cos.c",
+    "silk/NLSF2A.c",
+    "silk/NLSF_stabilize.c",
+    "silk/NLSF_VQ_weights_laroia.c",
+    "silk/pitch_est_tables.c",
+    "silk/resampler.c",
+    "silk/resampler_down2_3.c",
+    "silk/resampler_down2.c",
+    "silk/resampler_private_AR2.c",
+    "silk/resampler_private_down_FIR.c",
+    "silk/resampler_private_IIR_FIR.c",
+    "silk/resampler_private_up2_HQ.c",
+    "silk/resampler_rom.c",
+    "silk/sigm_Q15.c",
+    "silk/sort.c",
+    "silk/sum_sqr_shift.c",
+    "silk/stereo_decode_pred.c",
+    "silk/stereo_encode_pred.c",
+    "silk/stereo_find_predictor.c",
+    "silk/stereo_quant_pred.c",
+]
+
+opus_sources_silk = []
+
+if env["platform"] in ["android", "iphone", "javascript"]:
+    module_module_env.Append(CPPDEFINES=["FIXED_POINT"])
+    opus_sources_silk = [
+        "silk/fixed/LTP_analysis_filter_FIX.c",
+        "silk/fixed/LTP_scale_ctrl_FIX.c",
+        "silk/fixed/corrMatrix_FIX.c",
+        "silk/fixed/encode_frame_FIX.c",
+        "silk/fixed/find_LPC_FIX.c",
+        "silk/fixed/find_LTP_FIX.c",
+        "silk/fixed/find_pitch_lags_FIX.c",
+        "silk/fixed/find_pred_coefs_FIX.c",
+        "silk/fixed/noise_shape_analysis_FIX.c",
+        "silk/fixed/prefilter_FIX.c",
+        "silk/fixed/process_gains_FIX.c",
+        "silk/fixed/regularize_correlations_FIX.c",
+        "silk/fixed/residual_energy16_FIX.c",
+        "silk/fixed/residual_energy_FIX.c",
+        "silk/fixed/solve_LS_FIX.c",
+        "silk/fixed/warped_autocorrelation_FIX.c",
+        "silk/fixed/apply_sine_window_FIX.c",
+        "silk/fixed/autocorr_FIX.c",
+        "silk/fixed/burg_modified_FIX.c",
+        "silk/fixed/k2a_FIX.c",
+        "silk/fixed/k2a_Q16_FIX.c",
+        "silk/fixed/pitch_analysis_core_FIX.c",
+        "silk/fixed/vector_ops_FIX.c",
+        "silk/fixed/schur64_FIX.c",
+        "silk/fixed/schur_FIX.c",
+    ]
+else:
+    opus_sources_silk = [
+        "silk/float/apply_sine_window_FLP.c",
+        "silk/float/corrMatrix_FLP.c",
+        "silk/float/encode_frame_FLP.c",
+        "silk/float/find_LPC_FLP.c",
+        "silk/float/find_LTP_FLP.c",
+        "silk/float/find_pitch_lags_FLP.c",
+        "silk/float/find_pred_coefs_FLP.c",
+        "silk/float/LPC_analysis_filter_FLP.c",
+        "silk/float/LTP_analysis_filter_FLP.c",
+        "silk/float/LTP_scale_ctrl_FLP.c",
+        "silk/float/noise_shape_analysis_FLP.c",
+        "silk/float/prefilter_FLP.c",
+        "silk/float/process_gains_FLP.c",
+        "silk/float/regularize_correlations_FLP.c",
+        "silk/float/residual_energy_FLP.c",
+        "silk/float/solve_LS_FLP.c",
+        "silk/float/warped_autocorrelation_FLP.c",
+        "silk/float/wrappers_FLP.c",
+        "silk/float/autocorrelation_FLP.c",
+        "silk/float/burg_modified_FLP.c",
+        "silk/float/bwexpander_FLP.c",
+        "silk/float/energy_FLP.c",
+        "silk/float/inner_product_FLP.c",
+        "silk/float/k2a_FLP.c",
+        "silk/float/levinsondurbin_FLP.c",
+        "silk/float/LPC_inv_pred_gain_FLP.c",
+        "silk/float/pitch_analysis_core_FLP.c",
+        "silk/float/scale_copy_vector_FLP.c",
+        "silk/float/scale_vector_FLP.c",
+        "silk/float/schur_FLP.c",
+        "silk/float/sort_FLP.c",
+    ]
+
+sources += [thirdparty_dir + file for file in thirdparty_sources + opus_sources_silk]
+
+module_module_env.Prepend(CPPPATH=["#thirdparty/libogg"])
+module_module_env.Append(CPPDEFINES=["HAVE_CONFIG_H"])
+thirdparty_include_paths = [
+    "",
+    "celt",
+    "opus",
+    "silk",
+    "silk/fixed",
+    "silk/float",
+]
+module_module_env.Prepend(CPPPATH=[thirdparty_dir + "/" + dir for dir in thirdparty_include_paths])
+
+if env["platform"] == "android":
+    if "android_arch" in env and env["android_arch"] == "armv7":
+        module_module_env.Append(CPPDEFINES=["OPUS_ARM_OPT"])
+    elif "android_arch" in env and env["android_arch"] == "arm64v8":
+        module_module_env.Append(CPPDEFINES=["OPUS_ARM64_OPT"])
+elif env["platform"] == "iphone":
+    if "arch" in env and env["arch"] == "arm":
+        module_module_env.Append(CPPDEFINES=["OPUS_ARM_OPT"])
+    elif "arch" in env and env["arch"] == "arm64":
+        module_module_env.Append(CPPDEFINES=["OPUS_ARM64_OPT"])
+elif env["platform"] == "osx":
+    if "arch" in env and env["arch"] == "arm64":
+        module_module_env.Append(CPPDEFINES=["OPUS_ARM64_OPT"])
+
 # OneVOIP Extension
 
-env.Append(CPPPATH=["include/"])
+module_module_env.Append(CPPPATH=["include/"])
 env['CCPDBFLAGS'] = '/Zi /Fd${TARGET}.pdb'
-# env.Append(CPPDEFINES={"NDEBUG": None}) # For release builds
+# module_env.Append(CPPDEFINES={"NDEBUG": None}) # For release builds
 sources += Glob("src/*.cpp")
 
+
 if env["platform"] == "macos":
-    library = env.SharedLibrary(
+    library = module_env.SharedLibrary(
         "demo_rtc/bin/libonevoip.{}.{}.framework/libonevoip.{}.{}".format(
             env["platform"], env["target"], env["platform"], env["target"]
         ),
         source=sources,
     )
 else:
-    library = env.SharedLibrary(
+    library = module_module_env.SharedLibrary(
         "demo_rtc/bin/libonevoip{}{}".format(env["suffix"], env["SHLIBSUFFIX"]),
         source=sources,
     )
