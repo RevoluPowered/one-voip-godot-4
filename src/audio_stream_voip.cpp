@@ -47,12 +47,12 @@ void AudioStreamVOIP::push_packet(const PackedByteArray& packet){
     PackedVector2Array samples;
     samples.resize(OPUS_FRAME_SIZE);
 
-    int decoded_samples = opus_decode_float(_opus_decoder, packet.ptr(), packet.size(), (float*) _sample_buf.ptr(), OPUS_FRAME_SIZE, 0);
+    int decoded_samples = opus_decode_float(_opus_decoder, packet.ptr(), packet.size(), (float*) _sample_buf.ptrw(), OPUS_FRAME_SIZE, 0);
     assert( decoded_samples > 0 );
 
     unsigned int num_samples = OPUS_FRAME_SIZE;
     unsigned int num_buffer_samples = _sample_buf.size();
-    int resampling_result = speex_resampler_process_interleaved_float(_resampler, (float*) _sample_buf.ptr(), &num_buffer_samples, (float*) samples.ptr(), &num_samples);
+    int resampling_result = speex_resampler_process_interleaved_float(_resampler, (float*) _sample_buf.ptr(), &num_buffer_samples, (float*) samples.ptrw(), &num_samples);
     assert( resampling_result == 0 );
 
     // Push to the jitter buffer

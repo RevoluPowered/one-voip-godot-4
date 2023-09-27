@@ -10,7 +10,7 @@ Features:
 
 Builds for:
 - [Windows](#windows) ✅
-- Linux 🚧
+- [Linux](#linux) ✅
 - Android 🚧
 - Mac 🚧
 - [Web](#web-still-broken-on-godot-4) 🚧
@@ -44,7 +44,7 @@ Check out the demos for a full example.
 
 ### Windows
 
-Install CMake and Visual Studio build tools (MinGW will also work, instructions are for MSBuild)
+Install CMake and Visual Studio build tools (MinGW will also work by modifying the opus path in SConstruct, instructions are for MSBuild)
 
 In thirdparty/opus: `cmake -Bbuild`
 
@@ -53,6 +53,16 @@ In thirdparty/opus/build: `msbuild Opus.sln /p:Configuration=Release`
 In the project root: `scons`
 
 This will build to demo_rtc/bin
+
+### Linux
+
+[Possible Dependencies](https://docs.godotengine.org/en/stable/contributing/development/compiling/compiling_for_linuxbsd.html)
+
+In thirdparty/opus: `cmake -Bbuild -DCMAKE_POSITION_INDEPENDENT_CODE=ON`
+
+In thirdparty/opus/build: `make`
+
+In the project root: `scons`
 
 ### Web (STILL BROKEN ON GODOT 4)
 
