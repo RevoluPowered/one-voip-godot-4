@@ -18,7 +18,7 @@ sources = []
 
 env.Append(CPPPATH=["thirdparty/speex/include"])
 # v Windows settings
-env.Append(CPPDEFINES={"USE_SSE": None, "USE_SSE2": None, "FLOATING_POINT": None, "USE_SMALLFT": None}) # "EXPORT": None ?
+env.Append(CPPDEFINES={"OPUS_BUILD": None, "USE_SSE": None, "USE_SSE2": None, "FLOATING_POINT": None, "USE_SMALLFT": None}) # "EXPORT": None ?
 sources += ["thirdparty/speex/libspeexdsp/resample.c", "thirdparty/speex/libspeexdsp/jitter.c",
 "thirdparty/libogg/bitwise.c", "thirdparty/libogg/framing.c", ]
 
@@ -63,7 +63,9 @@ else:  # including if env["platform"] == "javascript":
     module_module_env.Append(CPPDEFINES=["WEBRTC_POSIX"])
 
 module_module_env.Prepend(CPPPATH=["thirdparty/opus"])
-module_module_env.Prepend(CPPPATH=["thirdparty/opus/opus"])
+module_module_env.Prepend(CPPPATH=["thirdparty/opus/celt"])
+module_module_env.Prepend(CPPPATH=["thirdparty/opus/include"])
+module_module_env.Prepend(CPPPATH=["thirdparty/opus/src"])
 module_module_env.Prepend(CPPPATH=["include"])
 
 thirdparty_dir = "thirdparty/opus/src/"
