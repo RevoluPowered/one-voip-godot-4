@@ -1,9 +1,14 @@
-[gd_resource type="AudioBusLayout" load_steps=2 format=3 uid="uid://dbkkm3ndh0chk"]
+[gd_resource type="AudioBusLayout" load_steps=3 format=3 uid="uid://dbkkm3ndh0chk"]
+
+[sub_resource type="AudioEffectRecord" id="AudioEffectRecord_28l4w"]
+resource_name = "Record"
 
 [sub_resource type="VOIPInputCapture" id="VOIPInputCapture_g0b74"]
 resource_name = "VOIPInputCapture"
 
 [resource]
+bus/0/effect/0/effect = SubResource("AudioEffectRecord_28l4w")
+bus/0/effect/0/enabled = true
 bus/1/name = &"Mic"
 bus/1/solo = false
 bus/1/mute = true

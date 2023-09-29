@@ -1,13 +1,16 @@
 extends "ws_webrtc_client.gd"
 
-var SERVER_URL = ""
-var LOBBY_NAME = ""
+@export var RECORD_VOICE = false
+
+@export var SERVER_URL = ""
+@export var LOBBY_NAME = ""
 
 var user = load("res://user.tscn")
 
 var rtc_mp: WebRTCMultiplayerPeer = WebRTCMultiplayerPeer.new()
 var sealed := false
 var mic_capture: VOIPInputCapture
+var master_record: AudioEffectRecord
 
 var users = {} # {WebRTCPeerConnection ID: AudioStreamPlayer}
 
@@ -18,9 +21,21 @@ func _ready():
 	
 	start(SERVER_URL, LOBBY_NAME)
 	
-	var idx = AudioServer.get_bus_index("Mic")
-	mic_capture = AudioServer.get_bus_effect(idx, 0)
+	var mic_bus = AudioServer.get_bus_index("Mic")
+	mic_capture = AudioServer.get_bus_effect(mic_bus, 0)
 	mic_capture.packet_ready.connect(self._packet_ready)
+	
+	var master_bus = AudioServer.get_bus_index("Master")
+	master_record = AudioServer.get_bus_effect(master_bus, 0)
+	if RECORD_VOICE:
+		master_record.set_recording_active(true)
+
+
+func _exit_tree():
+	if RECORD_VOICE:
+		var recording = master_record.get_recording()
+		master_record.set_recording_active(false)
+		recording.save_to_wav('test.wav')
 
 
 func _init():
