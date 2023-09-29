@@ -36,6 +36,9 @@
 #include <godot_cpp/core/error_macros.hpp>
 #include <godot_cpp/core/math.hpp>
 
+namespace godot {
+
+
 template <typename T>
 class RingBuffer {
 	std::vector<T> data;
@@ -219,5 +222,8 @@ public:
 	}
 	~RingBuffer<T>() {}
 };
+
+
+}
 
 #endif // RING_BUFFER_H
