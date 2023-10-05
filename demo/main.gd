@@ -1,6 +1,6 @@
 extends Node
 
-@export var SERVER_URL = ""
+@export var SERVER_URL = "127.0.0.1"
 @export var SERVER_PORT = 80
 
 var user = load("res://user.tscn")
