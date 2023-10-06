@@ -122,9 +122,11 @@ PackedByteArray VOIPInputCapture::_sample_buf_to_packet(PackedVector2Array sampl
     packet.timestamp = (std::chrono::steady_clock::now() - starting_timestamp) / 1ms;
     packet.opus_packet = opus_packet;
 
-    PackedByteArray to_return;
-    to_return.resize(sizeof(packet));
-    memcpy(&to_return, &packet, sizeof(packet));
+    UtilityFunctions::print("VOIPPacket size: ", sizeof(packet));
+
+    PackedByteArray to_return = packet.as_byte_array();
+
+    UtilityFunctions::print("PackedByteArray size: ", to_return.size());
 
     return to_return;
 }

@@ -42,9 +42,7 @@ Ref<AudioStreamPlayback> AudioStreamVOIP::_instantiate_playback() const{
 void AudioStreamVOIP::push_packet(const PackedByteArray& bytes){
     // UtilityFunctions::print("Received bytes: ", packet.size());
 
-    VOIPPacket packet;
-    packet.opus_packet.resize(bytes.size() - sizeof(packet));
-    memcpy(&packet, &bytes, sizeof(bytes));
+    VOIPPacket packet(bytes);
 
     PackedVector2Array samples;
     samples.resize(OPUS_FRAME_SIZE * GODOT_SAMPLE_RATE / OPUS_SAMPLE_RATE);
