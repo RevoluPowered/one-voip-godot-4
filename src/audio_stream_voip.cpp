@@ -39,17 +39,21 @@ Ref<AudioStreamPlayback> AudioStreamVOIP::_instantiate_playback() const{
     return playback;
 }
 
-void AudioStreamVOIP::push_packet(const PackedByteArray& packet){
+void AudioStreamVOIP::push_packet(const PackedByteArray& bytes){
     // UtilityFunctions::print("Received bytes: ", packet.size());
 
-    // Convert to PackedVector2Array in 44100 kHz
+    VOIPPacket packet;
+    packet.opus_packet.resize(bytes.size() - sizeof(packet));
+    memcpy(&packet, &bytes, sizeof(bytes));
 
     PackedVector2Array samples;
     samples.resize(OPUS_FRAME_SIZE * GODOT_SAMPLE_RATE / OPUS_SAMPLE_RATE);
 
-    int decoded_samples = opus_decode_float(_opus_decoder, packet.ptr(), packet.size(), (float*) _sample_buf.ptrw(), OPUS_FRAME_SIZE, 0);
+    // Decode opus packet into _sample_buf (48000, 480 samples)
+    int decoded_samples = opus_decode_float(_opus_decoder, packet.opus_packet.ptr(), packet.opus_packet.size(), (float*) _sample_buf.ptrw(), OPUS_FRAME_SIZE, 0);
     assert( decoded_samples > 0 );
 
+    // Resample from _sample_buf (48000, 480 samples) into samples (44100, 441 samples)
     unsigned int num_samples = samples.size();
     unsigned int num_buffer_samples = _sample_buf.size();
     int resampling_result = speex_resampler_process_interleaved_float(_resampler, (float*) _sample_buf.ptr(), &num_buffer_samples, (float*) samples.ptrw(), &num_samples);
@@ -57,6 +61,5 @@ void AudioStreamVOIP::push_packet(const PackedByteArray& packet){
     assert( resampling_result == 0 );
 
     // Push to the jitter buffer
-
     jitter_buffer.push_samples(0, samples);
 }

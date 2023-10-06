@@ -2,8 +2,10 @@
 #define VOIP_INPUT_CAPTURE_H
 
 #include <godot_cpp/classes/audio_effect_capture.hpp>
+#include <chrono>
 
 #include "audio_stream_voip.h"
+#include "voip_packet.h"
 #include "opus.h"
 #include "speex/speex_resampler.h"
 
@@ -23,6 +25,8 @@ private:
     OpusEncoder* _opus_encoder;
     SpeexResamplerState* _resampler;
     PackedVector2Array _sample_buf; // Resample audio here before sending through opus
+    int sequence_number = 0;
+    std::chrono::time_point<std::chrono::steady_clock> starting_timestamp;
 
     PackedByteArray _sample_buf_to_packet(PackedVector2Array samples);
 
