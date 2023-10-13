@@ -5,5 +5,5 @@ compatibility_minimum = 4.2
 
 [libraries]
 
-windows.debug.x86_64="res://bin/libonevoip.windows.template_debug.x86_64.dll"
-linux.debug.x86_64="res://bin/libonevoip.linux.template_debug.x86_64.so"
+windows.debug.x86_64="./libonevoip.windows.template_debug.x86_64.dll"
+linux.debug.x86_64="./libonevoip.linux.template_debug.x86_64.so"
