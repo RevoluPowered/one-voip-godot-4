@@ -23,7 +23,10 @@ private:
     int _last_resampler_error = 0;
     OpusDecoder* _opus_decoder;
     SpeexResamplerState* _resampler;
-    PackedVector2Array _sample_buf;
+
+    VOIPPacket _opus_packet_buf; // Decode byte array into here
+    PackedVector2Array _resample_buf; // Decode opus packet into here at 48k
+    PackedVector2Array _sample_buf; // Decode into here at 44.1k
 
 protected:
     static void _bind_methods();

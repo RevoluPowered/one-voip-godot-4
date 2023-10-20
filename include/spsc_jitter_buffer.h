@@ -20,7 +20,7 @@ public:
     ~SPSCJitterBuffer();
 
     // Push samples here and the time they were received
-    void push_samples(int timestamp, PackedVector2Array samples);
+    void push_samples(int timestamp, PackedVector2Array& samples);
 
     // Pop samples from here on the realtime audio thread
     void pop_samples(AudioFrame* samples, int frames);

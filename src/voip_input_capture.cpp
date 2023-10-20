@@ -16,8 +16,10 @@ VOIPInputCapture::VOIPInputCapture(){
     _resampler = speex_resampler_init(CHANNELS, GODOT_SAMPLE_RATE, OPUS_SAMPLE_RATE, RESAMPLING_QUALITY, &_last_resampler_error);
     assert( _resampler != NULL );
 
-    // Resize the scratch buffer to 480 samples
-    _sample_buf.resize(OPUS_FRAME_SIZE);
+    // Allocate everything in advance
+    _resample_buf.resize(OPUS_FRAME_SIZE);
+    _opus_packet_buf.opus_packet.resize( sizeof(float) * CHANNELS * OPUS_FRAME_SIZE );
+    _packet_buf.resize(_opus_packet_buf.opus_packet.size() + sizeof(_opus_packet_buf));
 
     // Set the starting timestamp to when the class is initialized
     starting_timestamp = std::chrono::steady_clock::now();
@@ -90,45 +92,37 @@ void VOIPInputCapture::send_test_packets(){
 
     while( get_frames_available() >= godot_frame_size ){
         PackedVector2Array samples = get_buffer(godot_frame_size);
-        PackedByteArray packet = _sample_buf_to_packet(samples);
-        emit_signal("packet_ready", packet);
+        _sample_buf_to_packet(samples, &_packet_buf);
+        emit_signal("packet_ready", _packet_buf);
     }
 }
 
 
-PackedByteArray VOIPInputCapture::_sample_buf_to_packet(PackedVector2Array samples){
-    assert( _sample_buf.size() == OPUS_FRAME_SIZE );
+void VOIPInputCapture::_sample_buf_to_packet(PackedVector2Array& samples, PackedByteArray* packet){
+    assert( _resample_buf.size() == OPUS_FRAME_SIZE );
     assert( samples.size() == OPUS_FRAME_SIZE * GODOT_SAMPLE_RATE / OPUS_SAMPLE_RATE );
 
-    // Create a new opus packet with the largest possible compressed size
-    PackedByteArray opus_packet;
-    opus_packet.resize( sizeof(float) * CHANNELS * OPUS_FRAME_SIZE ); // I hope this doesnt malloc
+    // Create a new opus packet in _opus_packet_buf.opus_packet with the largest possible compressed size
+    _opus_packet_buf.opus_packet.resize( sizeof(float) * CHANNELS * OPUS_FRAME_SIZE );
 
-    // Resample samples (44100, 441 samples) into _sample_buf (48000, 480 samples)
+    // Resample samples (44100, 441 samples) into _resample_buf (48000, 480 samples)
     unsigned int num_samples = samples.size();
     unsigned int num_buffer_samples = OPUS_FRAME_SIZE;
-    int resampling_result = speex_resampler_process_interleaved_float(_resampler, (float*) samples.ptr(), &num_samples, (float*) _sample_buf.ptrw(), &num_buffer_samples);
+    int resampling_result = speex_resampler_process_interleaved_float(_resampler, (float*) samples.ptr(), &num_samples, (float*) _resample_buf.ptrw(), &num_buffer_samples);
     assert( resampling_result == 0 );
 
-    // Opus encode from _sample_buf into opus_packet
-    int packet_size = opus_encode_float(_opus_encoder, (float*) _sample_buf.ptr(), OPUS_FRAME_SIZE, (unsigned char*) opus_packet.ptrw(), opus_packet.size());
+    // Opus encode from _resample_buf into _opus_packet_buf.opus_packet
+    int packet_size = opus_encode_float(_opus_encoder, (float*) _resample_buf.ptr(), OPUS_FRAME_SIZE, (unsigned char*) _opus_packet_buf.opus_packet.ptrw(), _opus_packet_buf.opus_packet.size());
     assert( packet_size > 0 );
-    opus_packet.resize( packet_size );
+    _opus_packet_buf.opus_packet.resize( packet_size );
 
     // Create a VOIPPacket to account for missing/delayed packets
-    VOIPPacket packet;
-    packet.sequence_number = sequence_number;
+    _opus_packet_buf.sequence_number = sequence_number;
     sequence_number++;
-    packet.timestamp = (std::chrono::steady_clock::now() - starting_timestamp) / 1ms;
-    packet.opus_packet = opus_packet;
+    _opus_packet_buf.timestamp = (std::chrono::steady_clock::now() - starting_timestamp) / 1ms;
 
-    UtilityFunctions::print("VOIPPacket size: ", sizeof(packet));
-
-    PackedByteArray to_return = packet.as_byte_array();
-
-    UtilityFunctions::print("PackedByteArray size: ", to_return.size());
-
-    return to_return;
+    // Convert to byte array for sending
+    _opus_packet_buf.to_byte_array(packet);
 }
 
 

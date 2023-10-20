@@ -24,11 +24,15 @@ private:
     int _last_resampler_error = 0;
     OpusEncoder* _opus_encoder;
     SpeexResamplerState* _resampler;
-    PackedVector2Array _sample_buf; // Resample audio here before sending through opus
+
+    PackedVector2Array _resample_buf; // Resample audio here before sending through opus
+    VOIPPacket _opus_packet_buf; // Put audio packet here before converting to byte array
+    PackedByteArray _packet_buf; // Put audio bytes here right before sending
+
     int sequence_number = 0;
     std::chrono::time_point<std::chrono::steady_clock> starting_timestamp;
 
-    PackedByteArray _sample_buf_to_packet(PackedVector2Array samples);
+    void _sample_buf_to_packet(PackedVector2Array& samples, PackedByteArray* packet);
 
 public:
     // Constants

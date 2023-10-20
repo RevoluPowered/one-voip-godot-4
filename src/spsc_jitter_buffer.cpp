@@ -14,7 +14,7 @@ SPSCJitterBuffer::~SPSCJitterBuffer(){
 }
 
 
-void SPSCJitterBuffer::push_samples(int timestamp, PackedVector2Array samples){
+void SPSCJitterBuffer::push_samples(int timestamp, PackedVector2Array& samples){
     int num_written = sample_queue.write(samples.ptr(), samples.size());
 
     if(num_written < samples.size()){

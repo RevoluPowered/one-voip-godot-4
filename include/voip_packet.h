@@ -11,25 +11,19 @@ struct VOIPPacket {
     PackedByteArray opus_packet;
 
     // Convert to byte array to send
-    PackedByteArray as_byte_array(){
-        PackedByteArray to_return;
-
-        to_return.resize(6);
-        to_return.encode_u16(0, sequence_number);
-        to_return.encode_u32(2, timestamp);
-        to_return.append_array(opus_packet);
-
-        return to_return;
+    void to_byte_array(PackedByteArray* byte_array){
+        byte_array->resize(6);
+        byte_array->encode_u16(0, sequence_number);
+        byte_array->encode_u32(2, timestamp);
+        byte_array->append_array(opus_packet);
     }
 
     // Convert back from byte array after received
-    VOIPPacket(PackedByteArray byte_array){
-        sequence_number = byte_array.decode_u16(0);
-        timestamp = byte_array.decode_u32(2);
-        opus_packet = byte_array.slice(6);
+    static void from_byte_array(VOIPPacket* opus_packet, const PackedByteArray& byte_array){
+        opus_packet->sequence_number = byte_array.decode_u16(0);
+        opus_packet->timestamp = byte_array.decode_u32(2);
+        opus_packet->opus_packet = byte_array.slice(6);
     }
-
-    VOIPPacket() {}
 };
 
 }
