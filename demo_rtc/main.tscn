@@ -6,6 +6,8 @@
 
 [node name="main" type="Node3D"]
 script = ExtResource("1_7wsab")
+SERVER_URL = "wss://api.lycan-subscribe.com/godot-rtc-demo"
+LOBBY_NAME = "e621lmao"
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
 stream = SubResource("AudioStreamMicrophone_qj58x")

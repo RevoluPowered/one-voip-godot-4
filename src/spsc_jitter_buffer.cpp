@@ -14,14 +14,14 @@ SPSCJitterBuffer::~SPSCJitterBuffer(){
 }
 
 
-void SPSCJitterBuffer::push_samples(int timestamp, PackedVector2Array& samples){
+void SPSCJitterBuffer::push_samples(uint16_t sequence_number, uint32_t timestamp, PackedVector2Array& samples){
     int num_written = sample_queue.write(samples.ptr(), samples.size());
 
     if(num_written < samples.size()){
         UtilityFunctions::print("TOO MANY SAMPLES - samples: ", samples.size(), " written: ", num_written);
         sample_queue.advance_read(32768); // Skip forward
     }
-    // UtilityFunctions::print("num_written: ",num_written);
+    //UtilityFunctions::print("num_written: ", num_written, "  timestamp: ", timestamp, "  sequence number: ", sequence_number);
 }
 
 void SPSCJitterBuffer::pop_samples(AudioFrame* samples, int frames){

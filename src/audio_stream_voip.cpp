@@ -63,5 +63,5 @@ void AudioStreamVOIP::push_packet(const PackedByteArray& bytes){
     assert( resampling_result == 0 );
 
     // Push to the jitter buffer
-    jitter_buffer.push_samples(0, _sample_buf);
+    jitter_buffer.push_samples(_opus_packet_buf.sequence_number, _opus_packet_buf.timestamp, _sample_buf);
 }
