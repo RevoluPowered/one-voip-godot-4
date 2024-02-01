@@ -8,22 +8,12 @@
 using namespace godot;
 
 
-AudioStreamVOIP::AudioStreamVOIP() : jitter_buffer(OPUS_FRAME_SIZE * GODOT_SAMPLE_RATE / OPUS_SAMPLE_RATE) {
-    _opus_decoder = opus_decoder_create(OPUS_SAMPLE_RATE, CHANNELS, &_last_opus_error);
-    assert(_opus_decoder != NULL);
-
-    _resampler = speex_resampler_init(CHANNELS, OPUS_SAMPLE_RATE, GODOT_SAMPLE_RATE, RESAMPLING_QUALITY, &_last_resampler_error);
-    assert( _resampler != NULL );
-
-    // Allocate everything in advance
-    _resample_buf.resize(OPUS_FRAME_SIZE);
-    _sample_buf.resize(OPUS_FRAME_SIZE * GODOT_SAMPLE_RATE / OPUS_SAMPLE_RATE);
-    _opus_packet_buf.opus_packet.resize(sizeof(float) * CHANNELS * OPUS_FRAME_SIZE);
+AudioStreamVOIP::AudioStreamVOIP() : jitter_buffer(OPUS_FRAME_SIZE, OPUS_SAMPLE_RATE, GODOT_SAMPLE_RATE, CHANNELS) {
+    // Allocate buffers in advance
+    _opus_packet_buf.opus_packet.resize(sizeof(float) * CHANNELS * OPUS_FRAME_SIZE); // max possible size of an opus packet
 }
 
 AudioStreamVOIP::~AudioStreamVOIP(){
-    opus_decoder_destroy(_opus_decoder);
-    speex_resampler_destroy(_resampler);
 }
 
 
@@ -32,6 +22,8 @@ void AudioStreamVOIP::_bind_methods(){
     // Methods
 
     ClassDB::bind_method(D_METHOD("push_packet", "packet"), &AudioStreamVOIP::push_packet);
+
+    ClassDB::bind_method(D_METHOD("tick"), &AudioStreamVOIP::tick);
 }
 
 
@@ -42,12 +34,16 @@ Ref<AudioStreamPlayback> AudioStreamVOIP::_instantiate_playback() const{
     return playback;
 }
 
+// GDScript dev just received a packet, they want to push it into the buffer
 void AudioStreamVOIP::push_packet(const PackedByteArray& bytes){
     // UtilityFunctions::print("Received bytes: ", packet.size());
 
     // Convert to opus packet
     VOIPPacket::from_byte_array(&_opus_packet_buf, bytes);
 
+    jitter_buffer.push_packet(_opus_packet_buf.opus_packet, _opus_packet_buf.timestamp, _opus_packet_buf.sequence_number);
+
+    /*
     // The number of samples the opus packet should have
     _sample_buf.resize(OPUS_FRAME_SIZE * GODOT_SAMPLE_RATE / OPUS_SAMPLE_RATE);
 
@@ -63,5 +59,9 @@ void AudioStreamVOIP::push_packet(const PackedByteArray& bytes){
     assert( resampling_result == 0 );
 
     // Push to the jitter buffer
-    jitter_buffer.push_samples(_opus_packet_buf.sequence_number, _opus_packet_buf.timestamp, _sample_buf);
+    jitter_buffer.push_samples(_opus_packet_buf.sequence_number, _opus_packet_buf.timestamp, _sample_buf);*/
+}
+
+void AudioStreamVOIP::tick(){
+    jitter_buffer.tick();
 }

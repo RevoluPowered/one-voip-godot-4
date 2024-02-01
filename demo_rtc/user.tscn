@@ -1,7 +1,10 @@
-[gd_scene load_steps=2 format=3 uid="uid://e8q0gjrr45rq"]
+[gd_scene load_steps=3 format=3 uid="uid://e8q0gjrr45rq"]
+
+[ext_resource type="Script" path="res://user.gd" id="1_8omw0"]
 
 [sub_resource type="AudioStreamVOIP" id="AudioStreamVOIP_fqv3d"]
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer"]
 stream = SubResource("AudioStreamVOIP_fqv3d")
 autoplay = true
+script = ExtResource("1_8omw0")

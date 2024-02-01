@@ -7,7 +7,7 @@ namespace godot {
 
 struct VOIPPacket {
     uint16_t sequence_number;
-    uint32_t timestamp;
+    uint32_t timestamp; // in ms
     PackedByteArray opus_packet;
 
     // Convert to byte array to send
