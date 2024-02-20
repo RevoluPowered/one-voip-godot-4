@@ -28,7 +28,11 @@ elif env["platform"] == "linux" or env["platform"] == "javascript":
 # Speex (resampler / jitter buffer)
 
 env.Append(CPPPATH=["thirdparty/speex/include"])
-env.Append(CPPDEFINES={"USE_SSE": None, "USE_SSE2": None, "FLOATING_POINT": None, "USE_SMALLFT": None}) # "EXPORT": None ?
+env.Append(CPPDEFINES={"FLOATING_POINT": None, "USE_SMALLFT": None}) # "EXPORT": None ?
+if env['HOST_ARCH'] == "amd64" or env['HOST_ARCH'] == "x86_64":
+    env.Append(CPPDEFINES={"USE_SSE": None, "USE_SSE2": None})
+elif env['HOST_ARCH'] == "arm64":
+    env.Append(CPPDEFINES={"USE_NEON": None})
 sources += ["thirdparty/speex/libspeexdsp/resample.c", "thirdparty/speex/libspeexdsp/jitter.c"]
 
 
