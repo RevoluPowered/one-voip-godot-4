@@ -20,7 +20,7 @@ sources = []
 if env["platform"] == "windows":
     env.Append(CPPPATH=["thirdparty/opus/include"], LIBS=["thirdparty/opus/build/Release/opus.lib"])
     env.Append(LINKFLAGS = ['/WX:NO'])
-elif env["platform"] == "linux" or env["platform"] == "javascript":
+else:
     env.Append(CPPPATH=["thirdparty/opus/include"], LIBS=["opus"], LIBPATH="thirdparty/opus/build")
     env.Append(CXXFLAGS = ['-fpermissive'])
 
@@ -29,9 +29,9 @@ elif env["platform"] == "linux" or env["platform"] == "javascript":
 
 env.Append(CPPPATH=["thirdparty/speex/include"])
 env.Append(CPPDEFINES={"FLOATING_POINT": None, "USE_SMALLFT": None}) # "EXPORT": None ?
-if env['HOST_ARCH'] == "amd64" or env['HOST_ARCH'] == "x86_64":
+if env['arch'] == "amd64" or env['arch'] == "x86_64":
     env.Append(CPPDEFINES={"USE_SSE": None, "USE_SSE2": None})
-elif env['HOST_ARCH'] == "arm64":
+elif env['arch'] == "arm64":
     env.Append(CPPDEFINES={"USE_NEON": None})
 sources += ["thirdparty/speex/libspeexdsp/resample.c", "thirdparty/speex/libspeexdsp/jitter.c"]
 
@@ -52,8 +52,8 @@ sources += Glob("src/*.cpp")
 
 if env["platform"] == "macos":
     library = env.SharedLibrary(
-        "demo_rtc/bin/libonevoip.{}.{}.framework/libonevoip.{}.{}".format(
-            env["platform"], env["target"], env["platform"], env["target"]
+        "demo_rtc/bin/libonevoip.{}.{}.framework/libonevoip.{}.{}.{}{}".format(
+            env["platform"], env["target"], env["platform"], env["target"], env["arch"], env["SHLIBSUFFIX"]
         ),
         source=sources,
     )
