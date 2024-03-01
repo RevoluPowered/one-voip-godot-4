@@ -40,6 +40,8 @@ stream.push_packet(packet)
 
 Check out the demos for a full example.
 
+If you use the demo ensure that AudioStreamPlayer uses unique AudioStreamVOIP making it local to scene.
+
 ## Compiling
 
 ### Windows
