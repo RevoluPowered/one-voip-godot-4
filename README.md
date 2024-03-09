@@ -11,7 +11,7 @@ Features:
 Builds for:
 - [Windows](#windows) ✅
 - [Linux](#linux) ✅
-- [Mac] (#mac) ✅
+- [Mac](#mac) ✅
 - Android 🚧
 - [Web](#web-still-broken-on-godot-4) 🚧
 
@@ -68,9 +68,11 @@ In the project root: `scons`
 
 Not sure on the status of whether unsigned GDExtensions can be loaded into MacOS, but it builds, so here are the instructions anyways
 
-In thirdparty/opus: `cmake -Bbuild -DCMAKE_OSX_ARCHITECTURES="arm64;x86_64"`
+!! You may need to set `driver/mix_rate=48000` in the `[audio]` section of `project.godot`
 
-In thirdparty/opus/build: `make` (?)
+In thirdparty/opus: `cmake -Bbuild`
+
+In thirdparty/opus/build: `make`
 
 In the project root: `scons platform=macos arch=x86_64` or `scons platform=macos arch=arm64`
 

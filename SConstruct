@@ -22,6 +22,8 @@ if env["platform"] == "windows":
     env.Append(LINKFLAGS = ['/WX:NO'])
 else:
     env.Append(CPPPATH=["thirdparty/opus/include"], LIBS=["opus"], LIBPATH="thirdparty/opus/build")
+
+if env["platform"] == "linux":
     env.Append(CXXFLAGS = ['-fpermissive'])
 
 
