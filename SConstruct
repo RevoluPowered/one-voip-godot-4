@@ -23,12 +23,17 @@ if env["platform"] == "windows":
 elif env["platform"] == "linux" or env["platform"] == "javascript":
     env.Append(CPPPATH=["thirdparty/opus/include"], LIBS=["opus"], LIBPATH="thirdparty/opus/build")
     env.Append(CXXFLAGS = ['-fpermissive'])
+elif env["platform"] == "android":
+    env.Append(CPPPATH=["thirdparty/opus/include"], LIBS=["opus"], LIBPATH="thirdparty/opus/build/obj/local/arm64-v8a")
 
 
 # Speex (resampler / jitter buffer)
 
 env.Append(CPPPATH=["thirdparty/speex/include"])
-env.Append(CPPDEFINES={"USE_SSE": None, "USE_SSE2": None, "FLOATING_POINT": None, "USE_SMALLFT": None}) # "EXPORT": None ?
+if env["platform"] == "android":
+    env.Append(CPPDEFINES={"FLOATING_POINT": None, "USE_SMALLFT": None}) # "EXPORT": None ?
+else:
+    env.Append(CPPDEFINES={"USE_SSE": None, "USE_SSE2": None, "FLOATING_POINT": None, "USE_SMALLFT": None}) # "EXPORT": None ?
 sources += ["thirdparty/speex/libspeexdsp/resample.c", "thirdparty/speex/libspeexdsp/jitter.c"]
 
 

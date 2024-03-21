@@ -75,3 +75,9 @@ In thirdparty/opus: `emcmake cmake -Bbuild`
 In thirdparty/opus/build: `make`
 
 In the project root: `scons platform=javascript`
+
+### Android (WIP)
+
+In thirdparty: `$NDK_HOME/ndk-build APP_PLATFORM=android-33 APP_BUILD_SCRIPT=Android.mk NDK_PROJECT_PATH=opus/build`
+
+In the project root: `scons platform=android arch=arm64`
