@@ -6,6 +6,7 @@
 
 #include <optional>
 #include "ring_buffer.h"
+#include "opus_packet.h"
 
 
 namespace godot {
@@ -14,7 +15,7 @@ namespace godot {
 class FixedJitterBuffer{
 
 protected:
-    RingBuffer<const PackedByteArray&> packet_queue;
+    RingBuffer<OpusPacket> packet_queue;
 
     enum BUFFER_STATE {
         REGENERATING,
@@ -26,10 +27,10 @@ public:
     ~FixedJitterBuffer();
 
     // Push packets here, they do not have to be in order
-    void push_packet(const PackedByteArray& packet);
+    void push_packet(OpusPacket packet);
 
     // Pop packets from here on the realtime audio thread
-    std::optional<const PackedByteArray&> pop_packet();
+    std::optional<OpusPacket> pop_packet();
 };
 
 

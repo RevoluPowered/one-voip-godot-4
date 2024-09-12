@@ -14,7 +14,7 @@ FixedJitterBuffer::~FixedJitterBuffer(){
 }
 
 
-void FixedJitterBuffer::push_packet(const PackedByteArray& packet){
+void FixedJitterBuffer::push_packet(OpusPacket packet){
     if(packet_queue.space_left() == 0){
         for(int i=0; i<8; i++) packet_queue.read(); // delete 8 oldest packets
     }
@@ -22,7 +22,7 @@ void FixedJitterBuffer::push_packet(const PackedByteArray& packet){
     packet_queue.write(packet);
 }
 
-std::optional<const PackedByteArray&> FixedJitterBuffer::pop_packet(){
+std::optional<OpusPacket> FixedJitterBuffer::pop_packet(){
     if(packet_queue.data_left() > 0) return packet_queue.read();
     else return std::nullopt;
 }

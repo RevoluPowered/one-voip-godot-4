@@ -25,16 +25,16 @@ int32_t AudioStreamPlaybackVOIP::_mix(AudioFrame *buffer, double rate_scale, int
 
     int32_t write_index = 0;
     while(write_index < frames){
-        std::optional<const PackedByteArray&> possible_packet = base->jitter_buffer.pop_packet();
+        std::optional<OpusPacket> possible_packet = base->jitter_buffer.pop_packet();
         if(!possible_packet.has_value()) break;
-        const PackedByteArray& packet = possible_packet.value();
+        OpusPacket packet = possible_packet.value();
 
         // Convert packet to PackedVector2Array in 44100 kHz
 
         PackedVector2Array samples;
         samples.resize(base->OPUS_FRAME_SIZE * base->GODOT_SAMPLE_RATE / base->OPUS_SAMPLE_RATE);
 
-        int decoded_samples = opus_decode_float(base->_opus_decoder, packet.ptr(), packet.size(), (float*) base->_sample_buf.ptrw(), base->OPUS_FRAME_SIZE, 0);
+        int decoded_samples = opus_decode_float(base->_opus_decoder, packet.bytes, sizeof(packet.bytes), (float*) base->_sample_buf.ptrw(), base->OPUS_FRAME_SIZE, 0);
         assert( decoded_samples > 0 );
 
         unsigned int num_samples = samples.size();

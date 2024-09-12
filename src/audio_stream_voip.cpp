@@ -39,10 +39,12 @@ Ref<AudioStreamPlayback> AudioStreamVOIP::_instantiate_playback() const{
     return playback;
 }
 
-void AudioStreamVOIP::push_packet(const PackedByteArray& packet){
+void AudioStreamVOIP::push_packet(const PackedByteArray& packet_bytes){
     // UtilityFunctions::print("Received bytes: ", packet.size());
 
     // Push to the jitter buffer
 
+    OpusPacket packet;
+    memcpy(&packet, packet_bytes.ptr(), packet_bytes.size());
     jitter_buffer.push_packet(packet);
 }
