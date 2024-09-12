@@ -1,3 +1,7 @@
+# INACTIVE DEVELOPMENT
+
+I have not had time to contribute to this recently, see [two voip godot 4](https://github.com/goatchurchprime/two-voip-godot-4) for a more actively maintained VOIP extension with a LOT more progress :>
+
 # VoIP extension for Godot 4
 
 Add voice chat to your game in minutes!
