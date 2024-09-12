@@ -66,4 +66,4 @@ func _voice_packet_received(packet):
 
 
 func _process(_delta):
-	mic_capture.send_test_packets()
+	mic_capture.get_new_packets()

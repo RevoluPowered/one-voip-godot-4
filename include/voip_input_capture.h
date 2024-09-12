@@ -1,3 +1,10 @@
+// Sends opus packets
+// - Attach the input capture to an audio bus
+// - Set the input capture property resource_local_to_scene = true
+// - Attach the signal packet_ready to a function that sends the packet to other users
+// - Call get_new_packets on a loop
+
+
 #ifndef VOIP_INPUT_CAPTURE_H
 #define VOIP_INPUT_CAPTURE_H
 
@@ -61,7 +68,7 @@ public:
     VOIPInputCapture();
     ~VOIPInputCapture();
 
-    void send_test_packets();
+    void get_new_packets();
 
 };
 

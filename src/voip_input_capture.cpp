@@ -26,7 +26,7 @@ void VOIPInputCapture::_bind_methods(){
 
     // Methods
 
-    ClassDB::bind_method(D_METHOD("send_test_packets"), &VOIPInputCapture::send_test_packets);
+    ClassDB::bind_method(D_METHOD("get_new_packets"), &VOIPInputCapture::get_new_packets);
 
 
     // Property Get / Set
@@ -78,7 +78,7 @@ void VOIPInputCapture::_bind_methods(){
 }
 
 
-void VOIPInputCapture::send_test_packets(){
+void VOIPInputCapture::get_new_packets(){
     int godot_frame_size = OPUS_FRAME_SIZE * GODOT_SAMPLE_RATE / OPUS_SAMPLE_RATE; // please don't be a fraction
 
     while( get_frames_available() >= godot_frame_size ){

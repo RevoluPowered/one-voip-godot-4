@@ -54,7 +54,7 @@ func _init():
 
 func _process(delta):
 	super._process(delta)
-	mic_capture.send_test_packets()
+	mic_capture.get_new_packets()
 	
 	var peers = rtc_mp.get_peers()
 	for peer_id in peers.keys():

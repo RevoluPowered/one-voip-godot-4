@@ -42,21 +42,7 @@ Ref<AudioStreamPlayback> AudioStreamVOIP::_instantiate_playback() const{
 void AudioStreamVOIP::push_packet(const PackedByteArray& packet){
     // UtilityFunctions::print("Received bytes: ", packet.size());
 
-    // Convert to PackedVector2Array in 44100 kHz
-
-    PackedVector2Array samples;
-    samples.resize(OPUS_FRAME_SIZE * GODOT_SAMPLE_RATE / OPUS_SAMPLE_RATE);
-
-    int decoded_samples = opus_decode_float(_opus_decoder, packet.ptr(), packet.size(), (float*) _sample_buf.ptrw(), OPUS_FRAME_SIZE, 0);
-    assert( decoded_samples > 0 );
-
-    unsigned int num_samples = samples.size();
-    unsigned int num_buffer_samples = _sample_buf.size();
-    int resampling_result = speex_resampler_process_interleaved_float(_resampler, (float*) _sample_buf.ptr(), &num_buffer_samples, (float*) samples.ptrw(), &num_samples);
-    samples.resize(num_samples);
-    assert( resampling_result == 0 );
-
     // Push to the jitter buffer
 
-    jitter_buffer.push_samples(0, samples);
+    jitter_buffer.push_packet(packet);
 }

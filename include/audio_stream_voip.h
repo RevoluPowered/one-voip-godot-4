@@ -1,3 +1,6 @@
+// Receives opus packets; use push_packet every time you receive a new one
+
+
 #ifndef AUDIO_STREAM_VOIP_H
 #define AUDIO_STREAM_VOIP_H
 
@@ -5,7 +8,7 @@
 #include <godot_cpp/classes/audio_stream_playback.hpp>
 
 #include "opus.h"
-#include "spsc_jitter_buffer.h"
+#include "fixed_jitter_buffer.h"
 #include "speex/speex_resampler.h"
 
 
@@ -39,7 +42,7 @@ public:
 
     // Properties
 
-    SPSCJitterBuffer jitter_buffer;
+    FixedJitterBuffer jitter_buffer;
 
 
     // Overrides
