@@ -1,5 +1,6 @@
 #include "audio_stream_playback_voip.h"
 
+#undef NDEBUG
 #include <cassert>
 
 using namespace godot;
@@ -34,7 +35,7 @@ int32_t AudioStreamPlaybackVOIP::_mix(AudioFrame *buffer, double rate_scale, int
         PackedVector2Array samples;
         samples.resize(base->OPUS_FRAME_SIZE * base->GODOT_SAMPLE_RATE / base->OPUS_SAMPLE_RATE);
 
-        int decoded_samples = opus_decode_float(base->_opus_decoder, packet.bytes, sizeof(packet.bytes), (float*) base->_sample_buf.ptrw(), base->OPUS_FRAME_SIZE, 0);
+        int decoded_samples = opus_decode_float(base->_opus_decoder, packet.bytes, packet.size, (float*) base->_sample_buf.ptrw(), base->OPUS_FRAME_SIZE, 0);
         assert( decoded_samples > 0 );
 
         unsigned int num_samples = samples.size();

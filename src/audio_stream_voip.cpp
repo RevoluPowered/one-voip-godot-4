@@ -3,6 +3,7 @@
 #include "audio_stream_voip.h"
 #include "audio_stream_playback_voip.h"
 
+#undef NDEBUG
 #include <cassert>
 
 using namespace godot;
@@ -45,6 +46,8 @@ void AudioStreamVOIP::push_packet(const PackedByteArray& packet_bytes){
     // Push to the jitter buffer
 
     OpusPacket packet;
+    assert(sizeof(packet.bytes) >= packet_bytes.size());
     memcpy(&packet, packet_bytes.ptr(), packet_bytes.size());
+    packet.size = packet_bytes.size();
     jitter_buffer.push_packet(packet);
 }

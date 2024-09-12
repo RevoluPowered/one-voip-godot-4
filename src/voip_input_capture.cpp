@@ -1,6 +1,7 @@
 #include "voip_input_capture.h"
 
 #include <godot_cpp/variant/utility_functions.hpp>
+#undef NDEBUG
 #include <cassert>
 
 using namespace godot;

@@ -3,6 +3,7 @@
 
 struct OpusPacket {
     unsigned char bytes[480];
+    unsigned int size;
 };
 
 #endif // OPUS_PACKET_H

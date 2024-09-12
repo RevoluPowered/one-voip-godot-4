@@ -61,7 +61,7 @@ if env["platform"] == "macos":
     )
 else:
     library = env.SharedLibrary(
-        "demo_rtc/bin/libonevoip{}{}".format(env["suffix"], env["SHLIBSUFFIX"]),
+        "demo/bin/libonevoip{}{}".format(env["suffix"], env["SHLIBSUFFIX"]),
         source=sources,
     )
 
