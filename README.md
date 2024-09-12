@@ -15,8 +15,8 @@ Features:
 Builds for:
 - [Windows](#windows) ✅
 - [Linux](#linux) ✅
+- [Mac](#mac) ✅
 - Android 🚧
-- Mac 🚧
 - [Web](#web-still-broken-on-godot-4) 🚧
 
 ## How to Use
@@ -44,6 +44,8 @@ stream.push_packet(packet)
 
 Check out the demos for a full example.
 
+If you use the demo ensure that AudioStreamPlayer uses unique AudioStreamVOIP making it local to scene.
+
 ## Compiling
 
 ### Windows
@@ -67,6 +69,18 @@ In thirdparty/opus: `cmake -Bbuild -DCMAKE_POSITION_INDEPENDENT_CODE=ON`
 In thirdparty/opus/build: `make`
 
 In the project root: `scons`
+
+### Mac
+
+Not sure on the status of whether unsigned GDExtensions can be loaded into MacOS, but it builds, so here are the instructions anyways
+
+!! You may need to set `driver/mix_rate=48000` in the `[audio]` section of `project.godot`
+
+In thirdparty/opus: `cmake -Bbuild`
+
+In thirdparty/opus/build: `make`
+
+In the project root: `scons platform=macos arch=x86_64` or `scons platform=macos arch=arm64`
 
 ### Web (STILL BROKEN ON GODOT 4)
 
